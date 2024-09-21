@@ -8,29 +8,30 @@ public class PlayerMovement : MonoBehaviour
 
     [SerializeField] private Rigidbody2D _target;
 
-    private Vector2 _movement;
+    private float _threshold = 0f;
+    private Vector2 _movement = new();
+
+    private void OnValidate()
+    {
+        _threshold = _minThreshold * _minThreshold;
+    }
 
     private void Update()
     {
-        var horizontal = Input.GetAxisRaw("Horizontal");
-        var vertical = Input.GetAxisRaw("Vertical");
-
-        _movement = Vector2.zero;
-
-        if (Mathf.Abs(horizontal) > _minThreshold)
-        {
-            _movement.x = horizontal * _speed;
-            _movement.y = 0f;
-        }
-        else if (Mathf.Abs(vertical) > _minThreshold)
-        {
-            _movement.x = 0f;
-            _movement.y = vertical * _speed;
-        }
+        _movement.x = Input.GetAxisRaw("Horizontal");
+        _movement.y = Input.GetAxisRaw("Vertical");
     }
 
     private void FixedUpdate()
     {
-        _target.velocity = _movement;
+        if (_movement.sqrMagnitude > _threshold)
+        {
+            _movement.Normalize();
+            _target.velocity = _movement * _speed;
+        }
+        else
+        {
+            _target.velocity = Vector2.zero;
+        }
     }
 }

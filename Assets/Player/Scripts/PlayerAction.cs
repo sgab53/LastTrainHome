@@ -1,8 +1,9 @@
 using UnityEngine;
 
 [RequireComponent(typeof(CircleCollider2D))]
-public class Interactor : MonoBehaviour
+public class PlayerAction : MonoBehaviour
 {
+    [SerializeField] private GameStateData _gameState;
     [SerializeField] private float _activationRange = 2f;
     [SerializeField] private CircleCollider2D _sensor;
 
@@ -19,10 +20,23 @@ public class Interactor : MonoBehaviour
 
     private void Update()
     {
-        if (Input.GetButtonDown("Action") && _cachedInteractable)
+        if (Input.GetButtonDown("Action"))
         {
-            _cachedInteractable.Activate();
-            _cachedInteractable = null;
+            switch (_gameState.InputContext)
+            {
+                case InputContext.Game:
+                    if (_cachedInteractable)
+                    {
+                        _cachedInteractable.Activate();
+                        _cachedInteractable = null;
+                    }
+                    break;
+                case InputContext.Dialogue:
+                    // next dialogue
+                    break;
+                default:
+                    break;
+            }
         }
     }
 

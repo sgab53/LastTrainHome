@@ -19,7 +19,7 @@ public class Interactor : MonoBehaviour
 
     private void Update()
     {
-        if (Input.GetButtonDown("Action"))
+        if (Input.GetButtonDown("Action") && _cachedInteractable)
         {
             _cachedInteractable.Activate();
             _cachedInteractable = null;

@@ -1,0 +1,2 @@
+notion2pandas==1.2.1
+tqdm==4.64.0

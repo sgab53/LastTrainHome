@@ -222,6 +222,7 @@ MonoBehaviour:
   _gameState: {fileID: 11400000, guid: 265b45fa676450218a09f2c9d5b692e2, type: 2}
   _textDatabaseData: {fileID: 11400000, guid: 05eaebe2df4f5324bbdfe97d67adafe0, type: 2}
   _dialoguesDatabaseData: {fileID: 11400000, guid: 5e3066d6ac0bffac0b5db804cd0c524e, type: 2}
+  _dialoguePanel: {fileID: 1243649958}
 --- !u!4 &124022986
 Transform:
   m_ObjectHideFlags: 0
@@ -411,7 +412,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!114 &337513250
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -632,31 +633,20 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4e127d999709ccfa2aa8b6923cc21394, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _disableSelf: 1
   _onActivate:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 576793508}
-        m_TargetAssemblyTypeName: UnityEngine.GameObject, UnityEngine
-        m_MethodName: SetActive
-        m_Mode: 6
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: dialogue_0
-          m_BoolArgument: 0
-        m_CallState: 2
-      - m_Target: {fileID: 1243649958}
-        m_TargetAssemblyTypeName: DialoguePanelController, Assembly-CSharp
-        m_MethodName: Show
+      - m_Target: {fileID: 124022985}
+        m_TargetAssemblyTypeName: DialoguePlayer, Assembly-CSharp
+        m_MethodName: StartDialogue
         m_Mode: 5
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
           m_IntArgument: 0
           m_FloatArgument: 0
-          m_StringArgument: Lorem ipsum dolor sit amet
+          m_StringArgument: dialogue_0
           m_BoolArgument: 0
         m_CallState: 2
 --- !u!58 &576793513
@@ -872,8 +862,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _gameState: {fileID: 11400000, guid: 265b45fa676450218a09f2c9d5b692e2, type: 2}
-  _activationRange: 2
+  _dialoguePlayer: {fileID: 124022985}
   _sensor: {fileID: 632524975}
+  _activationRange: 2
 --- !u!1 &672554027
 GameObject:
   m_ObjectHideFlags: 0
@@ -1595,6 +1586,55 @@ Canvas:
   m_SortingLayerID: 0
   m_SortingOrder: 0
   m_TargetDisplay: 0
+--- !u!1 &1491718638
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1491718640}
+  - component: {fileID: 1491718639}
+  m_Layer: 0
+  m_Name: GameInitializer
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &1491718639
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1491718638}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6c1f3fa8e15c0bdd4a1213dad80fa452, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _gameStateData: {fileID: 11400000, guid: 265b45fa676450218a09f2c9d5b692e2, type: 2}
+  _initialGameState:
+    State: 0
+    CurrentLanguage: {fileID: 11400000, guid: 7be4a8397f2253392b41966627eadab6, type: 2}
+    InputContext: 1
+--- !u!4 &1491718640
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1491718638}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1721746528
 GameObject:
   m_ObjectHideFlags: 0
@@ -1638,9 +1678,13 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
-    - target: {fileID: 1580684117547480851, guid: 48416f9db005a4ea1a941e77613ce75f, type: 3}
-      propertyPath: m_AdditionalShaderChannelsFlag
-      value: 25
+    - target: {fileID: 130516887072257392, guid: 48416f9db005a4ea1a941e77613ce75f, type: 3}
+      propertyPath: m_text
+      value: 'Lorem ipsum dolor sit amet, consectetur adipisci elit, sed do eiusmod
+        tempor incidunt ut labore et dolore magna aliqua.
+
+        Lorem ipsum dolor
+        sit amet, consectetur adipisci elit. Lorem ipsum dolor sit amet.'
       objectReference: {fileID: 0}
     - target: {fileID: 1812713195240117835, guid: 48416f9db005a4ea1a941e77613ce75f, type: 3}
       propertyPath: m_LocalPosition.x
@@ -1703,3 +1747,4 @@ SceneRoots:
   - {fileID: 124022986}
   - {fileID: 14387218}
   - {fileID: 5165732100822553593}
+  - {fileID: 1491718640}

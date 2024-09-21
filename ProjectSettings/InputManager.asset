@@ -11,8 +11,8 @@ InputManager:
     descriptiveNegativeName: 
     negativeButton: left
     positiveButton: right
-    altNegativeButton: 
-    altPositiveButton: 
+    altNegativeButton: a
+    altPositiveButton: d
     gravity: 3
     dead: 0.001
     sensitivity: 3
@@ -27,8 +27,8 @@ InputManager:
     descriptiveNegativeName: 
     negativeButton: down
     positiveButton: up
-    altNegativeButton: 
-    altPositiveButton: 
+    altNegativeButton: s
+    altPositiveButton: w
     gravity: 3
     dead: 0.001
     sensitivity: 3
@@ -53,8 +53,6 @@ InputManager:
     type: 0
     axis: 0
     joyNum: 1
-<<<<<<< HEAD
-=======
   - serializedVersion: 3
     m_Name: Submit
     descriptiveName: 
@@ -87,5 +85,4 @@ InputManager:
     type: 0
     axis: 0
     joyNum: 1
->>>>>>> interaction
   m_UsePhysicalKeys: 1

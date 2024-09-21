@@ -1,0 +1,10 @@
+{
+    "_data":
+    {
+        "dialogue_0":
+        ["greeting", "explanation", "debug"],
+        
+        "dialogue_1":
+        ["hello", "world"]
+    }
+}

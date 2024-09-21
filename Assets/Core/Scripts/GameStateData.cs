@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public enum GameState
+public enum PlayState
 {
     Unset       = -1,
     Playing     = 0,
@@ -18,15 +18,26 @@ public enum InputContext
 [CreateAssetMenu(fileName = "GameStateData", menuName = "GameStateData", order = 0)]
 public class GameStateData : ScriptableObject
 {
-    [SerializeField] private GameState _gameState;
-    [SerializeField] private LanguageData _currentLanguage;
-    [SerializeField] private InputContext _inputContext;
+    private GameState _gameState = new();
 
-    public GameState GameState => _gameState;
-    public LanguageData CurrentLanguage => _currentLanguage;
-    public InputContext InputContext => _inputContext;
+    public PlayState PlayState => _gameState.State;
+    public LanguageData CurrentLanguage => _gameState.CurrentLanguage;
+    public InputContext InputContext => _gameState.InputContext;
 
-    public void ChangeState(GameState newState) => _gameState = newState;
-    public void ChangeLanguage(LanguageData newLanguage) => _currentLanguage = newLanguage;
-    public void ChangeInputContext(InputContext newContext) => _inputContext = newContext;
+    public void UpdateGame(PlayState newState) => _gameState.State = newState;
+    public void UpdateGame(LanguageData newLanguage) => _gameState.CurrentLanguage = newLanguage;
+    public void UpdateGame(InputContext newContext) => _gameState.InputContext = newContext;
+
+    public void UpdateGame(GameState gameState)
+    {
+        _gameState = gameState;
+    }
+}
+
+[System.Serializable]
+public struct GameState
+{
+    public PlayState State;
+    public LanguageData CurrentLanguage;
+    public InputContext InputContext;
 }

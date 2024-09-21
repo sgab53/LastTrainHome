@@ -9,16 +9,16 @@ public class DialoguesDatabase
 {
     // Key: dialogue key
     // Value: line texts keys
-    public Dictionary<string, string[]> _dialoguesTexts;
+    public Dictionary<string, string[]> _data;
 
     public string GetLineKey(string key, int index)
     {
-        if (!_dialoguesTexts.ContainsKey(key))
+        if (!_data.ContainsKey(key))
             Debug.LogError($"Key \"{key}\" does not exist.");
 
-        var lines = _dialoguesTexts[key];
+        var lines = _data[key];
 
-        if (index > lines.Length)
+        if (index >= lines.Length)
             return null;
 
         return lines[index];

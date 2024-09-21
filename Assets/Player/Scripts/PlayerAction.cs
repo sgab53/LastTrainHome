@@ -4,8 +4,11 @@ using UnityEngine;
 public class PlayerAction : MonoBehaviour
 {
     [SerializeField] private GameStateData _gameState;
-    [SerializeField] private float _activationRange = 2f;
+    [SerializeField] private DialoguePlayer _dialoguePlayer;
+    
+    [Header("Components")]
     [SerializeField] private CircleCollider2D _sensor;
+    [SerializeField] private float _activationRange = 2f;
 
     private Interactable _cachedInteractable;
 
@@ -22,6 +25,7 @@ public class PlayerAction : MonoBehaviour
     {
         if (Input.GetButtonDown("Action"))
         {
+            Debug.Log("premuto");
             switch (_gameState.InputContext)
             {
                 case InputContext.Game:
@@ -32,7 +36,7 @@ public class PlayerAction : MonoBehaviour
                     }
                     break;
                 case InputContext.Dialogue:
-                    // next dialogue
+                    _dialoguePlayer.Next();
                     break;
                 default:
                     break;

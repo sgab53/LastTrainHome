@@ -2,7 +2,7 @@ from notion2pandas import Notion2PandasClient
 import json
 import ast
 
-with open('secrets.json', 'r') as notionFile:
+with open('tools/secrets.json', 'r') as notionFile:
     notion_data = json.load(notionFile)
     token = notion_data.get('notion_api_token')
     database_texts_id = notion_data.get(

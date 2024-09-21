@@ -4,6 +4,7 @@ using UnityEngine.Events;
 [RequireComponent(typeof(Collider2D))]
 public class Interactable : MonoBehaviour
 {
+    [SerializeField] private bool _disableSelf;
     [SerializeField] private UnityEvent _onActivate;
 
     private Collider2D _trigger;
@@ -17,6 +18,9 @@ public class Interactable : MonoBehaviour
 
     public void Activate()
     {
+        if (_disableSelf)
+            gameObject.SetActive(false);
+        
         _onActivate?.Invoke();
     }
 }

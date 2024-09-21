@@ -17,7 +17,7 @@ transformed_data = {row['key']: {"it": row['it'], "en": row['en']} for _, row in
 json_result = json.dumps(transformed_data, indent=4)
 
 
-with open('texts.json', 'w') as f:
+with open('Assets/DialogueSystem/Resources/texts.json', 'w') as f:
     f.write(json_result)
 
 dfdialog = n2p.from_notion_DB_to_dataframe(database_dialogs_id)
@@ -26,5 +26,5 @@ dfdialog['testi'] = dfdialog['testi'].apply(ast.literal_eval)
 transformed_data = {row['key']: {"testi": row['testi']} for _, row in dfdialog.iterrows()}
 json_result = json.dumps(transformed_data, indent=4)
 
-with open('outputdialogo.json', 'w') as f:
+with open('Assets/DialogueSystem/Resources/dialogues.json', 'w') as f:
     f.write(json_result)

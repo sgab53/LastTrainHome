@@ -1,21 +1,18 @@
-using System.Collections.Generic;
+using System;
 using UnityEngine;
 
 public class DialoguePlayer : MonoBehaviour
 {
     [SerializeField] private GameStateData _gameState;
     [SerializeField] private TextDatabaseData _textDatabaseData;
-    private DialoguesDatabase _dialoguesDatabase;
-    private DialogueData _currentDialogue;
+    [SerializeField] private DialoguesDatabaseData _dialoguesDatabaseData;
+
+    public event Action OnDialogueEnded;
+
+    private string _currentDialogue;
     private int _index = -1;
 
-    private void Awake()
-    {
-        var textAsset = Resources.Load<TextAsset>("dialogues");
-        _dialoguesDatabase = JsonUtility.FromJson<DialoguesDatabase>(textAsset.text);
-    }
-
-    public void StartDialogue(DialogueData newDialogue)
+    public void StartDialogue(string newDialogue)
     {
         _currentDialogue = newDialogue;
         Next();
@@ -24,20 +21,17 @@ public class DialoguePlayer : MonoBehaviour
     public void Next()
     {
         // play next dialogue line
-        var key = _currentDialogue.Keys[++_index];
+        ++_index;
+
         var languageCode = _gameState.CurrentLanguage.Code;
-        _dialoguesDatabase.GetLine(_textDatabaseData.Database, key, languageCode);
-    }
-
-    private class DialoguesDatabase
-    {
-        // Key: dialogue key
-        // Value: text key
-        private readonly Dictionary<string, string> _dialoguesTexts;
-
-        public string GetLine(TextDatabase database, string key, string languageCode)
+        var lineKey = _dialoguesDatabaseData.Database.GetLineKey(_currentDialogue, _index);
+        
+        if (lineKey == null)
         {
-            return database.GetText(_dialoguesTexts[key], languageCode);
+            OnDialogueEnded?.Invoke();
+            return;
         }
+
+        var line = _textDatabaseData.Database.GetText(lineKey, languageCode);
     }
 }

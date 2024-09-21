@@ -12,5 +12,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e1b178cc8a8fb0321afd0101997ce8c4, type: 3}
   m_Name: GameStateData
   m_EditorClassIdentifier: 
-  _gameState: -1
-  _currentLanguage: {fileID: 0}
+  _gameState: 0
+  _currentLanguage: {fileID: 11400000, guid: 7be4a8397f2253392b41966627eadab6, type: 2}
+  _inputContext: 1

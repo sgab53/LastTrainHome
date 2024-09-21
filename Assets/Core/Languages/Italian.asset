@@ -14,5 +14,5 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _languageSprite: {fileID: 0}
   _languageLabel: Italiano
-  _languageCode: IT
+  _languageCode: it
   _languageIndex: 0

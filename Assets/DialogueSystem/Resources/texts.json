@@ -1,0 +1,58 @@
+{
+    "SC2_P4": {
+        "it": "Chiusa, niente da fare.",
+        "en": ""
+    },
+    "SC2_P3": {
+        "it": "Anche questo orologio è fermo.",
+        "en": ""
+    },
+    "SC2_P2": {
+        "it": "Non c’è nessuno.",
+        "en": ""
+    },
+    "SC2_P1": {
+        "it": "Forse alla biglietteria.",
+        "en": ""
+    },
+    "SC1_Interfono": {
+        "it": "In arrivo tra un minuto l’ultimo treno per XXX al binario 1",
+        "en": ""
+    },
+    "SC1_P7": {
+        "it": "Meglio affrettarsi.",
+        "en": ""
+    },
+    "SC1_P6": {
+        "it": "In ogni caso il treno è in ritardo, meglio andare a chiedere a qualcuno. Se non lo prendo poi…",
+        "en": ""
+    },
+    "SC1_P5": {
+        "it": "Si è rotto l’orologio? Anche il cellulare…",
+        "en": ""
+    },
+    "SC1_P4": {
+        "it": "Ma cosa… sempre le 20:49?",
+        "en": ""
+    },
+    "SC1_P3": {
+        "it": "Ancora non arriva.",
+        "en": ""
+    },
+    "SC1_P2": {
+        "it": "Strano…",
+        "en": "Strange…"
+    },
+    "SC1_P1": {
+        "it": "…",
+        "en": "…"
+    },
+    "first_sms": {
+        "it": "Dove sei?",
+        "en": "Where are you?"
+    },
+    "start_game": {
+        "it": "Inizia gioco",
+        "en": "start game"
+    }
+}

@@ -1,0 +1,17 @@
+{
+    "Scena 2": {
+        "testi": []
+    },
+    "Scena 1": {
+        "testi": [
+            "SC1_Interfono",
+            "SC1_P1",
+            "SC1_P2",
+            "SC1_P3",
+            "SC1_P4",
+            "SC1_P5",
+            "SC1_P6",
+            "SC1_P7"
+        ]
+    }
+}

@@ -19,6 +19,8 @@ public class EnemyAI : MonoBehaviour
 
     [SerializeField] private EnviromentPoint currentEnviromentPoint; //dove sto andando
     [SerializeField] private EnviromentPoint oldEnviromentPoint; // dove stavo
+    
+    [SerializeField] private EnviromentGraph currentEnviromentGraph; // Tutti i punti della stanza
 
     [SerializeField] private float comeBackPercentage = 0.20f;
     [SerializeField] private float playerDistanceGotcha = 0.10f;
@@ -43,12 +45,47 @@ public class EnemyAI : MonoBehaviour
             if(IsPlayerInFieldOfView()) 
                 EnteringInDestroyMode();
         }
+
+        if (status == EnemyStatus.DESTROY)
+        {
+            if (!IsPlayerInFieldOfView())
+            {
+                EnteringInSearchMode();
+            }
+        }
         
     }
 
     public void ForceDestroyMode()
     {
         EnteringInDestroyMode();
+    }
+    
+    private EnviromentPoint GetClosestEnviromentPoint()
+    {
+        EnviromentPoint closest = currentEnviromentGraph.points[0];
+        float minDistance = Vector3.Distance(transform.position, closest.GetPosition());
+
+        foreach (EnviromentPoint point in currentEnviromentGraph.points)
+        {
+            float distance = Vector3.Distance(transform.position, point.GetPosition());
+            if (distance < minDistance)
+            {
+                closest = point;
+                minDistance = distance;
+            }
+        }
+
+        return closest;
+    }
+
+    private void EnteringInSearchMode()
+    {
+        StopCoroutine(movementCoroutine);
+        status = EnemyStatus.SEARCHING;
+        this.oldEnviromentPoint = null;
+        this.currentEnviromentPoint = GetClosestEnviromentPoint();
+        movementCoroutine = StartCoroutine(MoveTowardsTarget());
     }
     
     private void EnteringInDestroyMode()
@@ -88,9 +125,10 @@ public class EnemyAI : MonoBehaviour
         return false;  // Il giocatore è fuori dal cono visivo
     }
 
-    public void OnEnterRoom(EnviromentPoint currentEnviromentPoint, EnviromentPoint oldEnviromentPoint)
+    public void OnEnterRoom(EnviromentGraph enviromentGraph, EnviromentPoint currentEnviromentPoint, EnviromentPoint oldEnviromentPoint)
     {
         status = EnemyStatus.SEARCHING;
+        this.currentEnviromentGraph = enviromentGraph;
         this.currentEnviromentPoint = currentEnviromentPoint;
         this.oldEnviromentPoint = oldEnviromentPoint;
         movementCoroutine = StartCoroutine(MoveTowardsTarget());
@@ -100,11 +138,11 @@ public class EnemyAI : MonoBehaviour
     {
         if (currentEnviromentPoint.Connections.Count == 1)
         {
-            SetNewTarget(oldEnviromentPoint);
+            SetNewTarget(currentEnviromentPoint.Connections[0]);
             movementCoroutine = StartCoroutine(MoveTowardsTarget());
             return;
         }
-        bool cantComeBack = Random.Range(0f, 1f) > comeBackPercentage;
+        bool cantComeBack = oldEnviromentPoint== null && Random.Range(0f, 1f) > comeBackPercentage;
         while (true)
         {
             EnviromentPoint point = GetRandomElement(currentEnviromentPoint.Connections);

@@ -9,14 +9,19 @@ public class EnemyAI : MonoBehaviour
     private enum EnemyStatus
     {
         SEARCHING,
-        DESTROY
+        DESTROY,
+        STOPPED,
+        SUFFERING
     }
-    [SerializeField] private bool aiIsActive = true;
+    
     [SerializeField] private Transform player;
     [SerializeField] private EnemyStatus status = EnemyStatus.SEARCHING;
 
     [SerializeField] private EnviromentPoint currentEnviromentPoint; //dove sto andando
     [SerializeField] private EnviromentPoint oldEnviromentPoint; // dove stavo
+
+    [SerializeField] private float comeBackPercentage = 0.20f;
+    [SerializeField] private float playerDistanceGotcha = 0.10f;
     
     public float viewRadius = 5f;  // Raggio del cono visivo
     public float viewAngle = 45f;
@@ -33,12 +38,25 @@ public class EnemyAI : MonoBehaviour
     
     void Update() {
 
-        if (status == EnemyStatus.SEARCHING && IsPlayerInFieldOfView()) {
-            StopCoroutine(movementCoroutine);
-            movementCoroutine = null;
-            status = EnemyStatus.DESTROY;
-            movementCoroutine = StartCoroutine(MoveTowardsPlayer());
+        if (status == EnemyStatus.SEARCHING)
+        {
+            if(IsPlayerInFieldOfView()) 
+                EnteringInDestroyMode();
         }
+        
+    }
+
+    public void ForceDestroyMode()
+    {
+        EnteringInDestroyMode();
+    }
+    
+    private void EnteringInDestroyMode()
+    {
+        StopCoroutine(movementCoroutine);
+        movementCoroutine = null;
+        status = EnemyStatus.DESTROY;
+        movementCoroutine = StartCoroutine(MoveTowardsPlayer());
     }
     
     bool IsPlayerInFieldOfView()
@@ -72,6 +90,7 @@ public class EnemyAI : MonoBehaviour
 
     public void OnEnterRoom(EnviromentPoint currentEnviromentPoint, EnviromentPoint oldEnviromentPoint)
     {
+        status = EnemyStatus.SEARCHING;
         this.currentEnviromentPoint = currentEnviromentPoint;
         this.oldEnviromentPoint = oldEnviromentPoint;
         movementCoroutine = StartCoroutine(MoveTowardsTarget());
@@ -85,7 +104,7 @@ public class EnemyAI : MonoBehaviour
             movementCoroutine = StartCoroutine(MoveTowardsTarget());
             return;
         }
-        bool cantComeBack = Random.Range(0f, 1f) > 0.20f;
+        bool cantComeBack = Random.Range(0f, 1f) > comeBackPercentage;
         while (true)
         {
             EnviromentPoint point = GetRandomElement(currentEnviromentPoint.Connections);
@@ -130,7 +149,7 @@ public class EnemyAI : MonoBehaviour
     
     private IEnumerator MoveTowardsPlayer()
     {
-        while (Vector3.Distance(transform.position, player.position) > 0.1f)
+        while (Vector3.Distance(transform.position, player.position) > playerDistanceGotcha)
         {
             transform.position = Vector3.MoveTowards(transform.position, player.position, destroySpeed * Time.deltaTime);
             yield return null; // Aspetta il frame successivo

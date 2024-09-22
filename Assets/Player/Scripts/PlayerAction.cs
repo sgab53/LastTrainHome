@@ -25,7 +25,6 @@ public class PlayerAction : MonoBehaviour
     {
         if (Input.GetButtonDown("Action"))
         {
-            Debug.Log("premuto");
             switch (_gameState.InputContext)
             {
                 case InputContext.Game:

@@ -1,4 +1,5 @@
 using System;
+using Cysharp.Threading.Tasks;
 using UnityEngine;
 
 public class DialoguePlayer : MonoBehaviour
@@ -25,13 +26,13 @@ public class DialoguePlayer : MonoBehaviour
     private void ResetState()
     {
         _dialoguePanel.Hide();
+        _dialoguePanel.Cancel();
         _gameState.UpdateGame(_previousState);
         _gameState.UpdateGame(_previousContext);
     }
 
     public void StartDialogue(string newDialogue)
     {
-        Debug.Log("start dialog");
         _gameState.UpdateGame(InputContext.Dialogue);
         _gameState.UpdateGame(PlayState.Cutscene);
         _currentDialogue = newDialogue;
@@ -39,17 +40,33 @@ public class DialoguePlayer : MonoBehaviour
         Next();
     }
 
+
+private bool _busy = false;
     public void Next()
     {
-        Debug.Log("next");
+        if (_busy)
+            return;
+        WaitForNextLine().Forget();
+    }
+
+    private async UniTaskVoid WaitForNextLine()
+    {
+        _busy = true;
+        var completed = await _dialoguePanel.Complete();
+        if (completed)
+        {
+            _busy = false;
+            return;
+        }
+
         ++_index;
         var languageCode = _gameState.CurrentLanguage.Code;
         var lineKey = _dialoguesDatabaseData.Database.GetLineKey(_currentDialogue, _index);
         
         if (lineKey == null)
         {
-            Debug.Log("null finito");
             OnDialogueEnded?.Invoke();
+            _busy = false;
             return;
         }
 
@@ -57,5 +74,6 @@ public class DialoguePlayer : MonoBehaviour
 
         _dialoguePanel.SetText(line);
         _dialoguePanel.Show();
+        _busy = false;
     }
 }

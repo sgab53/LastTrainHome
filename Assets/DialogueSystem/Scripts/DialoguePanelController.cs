@@ -1,5 +1,6 @@
 using Cysharp.Threading.Tasks;
 using System;
+using System.Threading;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -16,66 +17,77 @@ public class DialoguePanelController : MonoBehaviour
     [SerializeField] private int _blinkDelayMs = 500;
 
     public event Action OnTypingCompleted;
+    
+    private bool _isTyping;
 
-    private bool _isVisible, _isBlinking, _isTyping;
+    private CancellationTokenSource _typeSource, _fadeSource, _blinkSource;
 
     private void Start()
     {
         OnTypingCompleted += TypingCompleted;
         _targetLabel.text = "";
         _targetImage.enabled = false;
+        _isTyping = false;
         _canvas.alpha = 0f;
-        _isVisible = _isBlinking = _isTyping = false;
     }
 
     public void Type()
     {
-        _isTyping = false;
-        ExecuteTyping().Forget();
+        CancelSource(_blinkSource);
+        CancelSource(_typeSource);
+
+        _typeSource = new();
+        ExecuteTyping(_typeSource).Forget();
     }
 
     public void SetText(string text)
     {
         _targetLabel.text = text;
-        _isBlinking = false;
         Type();
     }
 
     public void Show()
     {
-        if (_isVisible)
+        if (_canvas.alpha > 0f)
+            return;
+
+        if (_fadeSource != null)
         {
-            if (!_isTyping)
-                Type();
+            _fadeSource.Cancel();
+            _canvas.alpha = 1f;
             return;
         }
-        
-        _isVisible = true;
-        StartShowAndType().Forget();
+
+        _fadeSource = new();
+        ExecuteFade(_fadeSource, 0f, 1f).Forget();
     }
 
     public void Hide()
     {
-        if (!_isVisible)
+        if (_canvas.alpha < 1f)
             return;
-        
-        _isVisible = false;
-        ExecuteFade(1f, 0f).Forget();
+
+        if (_fadeSource != null)
+        {
+            _fadeSource.Cancel();
+            _canvas.alpha = 0f;
+            return;
+        }
+
+        _fadeSource = new();
+        ExecuteFade(_fadeSource, 1f, 0f).Forget();
     }
 
-    private async UniTaskVoid StartShowAndType()
-    {
-        await ExecuteFade(0f, 1f);
-        Type();
-    }
-
-    private async UniTask ExecuteFade(float from, float to)
+    private async UniTask ExecuteFade(CancellationTokenSource source, float from, float to)
     {
         float t = 0f;
         var now = Time.realtimeSinceStartup;
 
         while (t < 1f)
         {
+            if (source.IsCancellationRequested)
+                return;
+
             await UniTask.Yield();
             t += (Time.realtimeSinceStartup - now) / _canvasFadeTime;
             now = Time.realtimeSinceStartup;
@@ -83,46 +95,105 @@ public class DialoguePanelController : MonoBehaviour
         }
     }
 
-    private async UniTaskVoid ExecuteTyping()
+    private async UniTaskVoid ExecuteTyping(CancellationTokenSource source)
     {
         _isTyping = true;
-
-        for (int i = 0; i < _targetLabel.text.Length; ++i)
+        for (int i = 1; i < _targetLabel.text.Length; ++i)
         {
             _targetLabel.maxVisibleCharacters = i;
-            await UniTask.Delay(_characterDelayMs);
-            
-            if (!_isTyping)
+
+            if (source.IsCancellationRequested)
             {
-                OnTypingCompleted?.Invoke();
+                _isTyping = false;
                 return;
             }
+
+            await UniTask.Delay(_characterDelayMs);
         }
 
         _isTyping = false;
-
         OnTypingCompleted?.Invoke();
     }
 
     private void TypingCompleted()
     {
-        _targetImage.enabled = true;
-        StartBlinking().Forget();
+        _targetLabel.maxVisibleCharacters = _targetLabel.text.Length;
+
+        CancelSource(_blinkSource);
+
+        _blinkSource = new();
+        StartBlinking(_blinkSource).Forget();
     }
 
-    private async UniTaskVoid StartBlinking()
+    private async UniTaskVoid StartBlinking(CancellationTokenSource source)
     {
-        if (_isBlinking)
-            return;
+        _targetImage.enabled = true;
 
-        _isBlinking = true;
-
-        while (gameObject.activeInHierarchy && _isBlinking)
+        while (gameObject.activeInHierarchy)
         {
+            if (source.IsCancellationRequested)
+            {
+                _targetImage.enabled = false;
+                return;
+            }
+
             await UniTask.Delay(_blinkDelayMs);
             _targetImage.enabled = !_targetImage.enabled;
         }
 
-        _isBlinking = false;
+        _targetImage.enabled = false;
+    }
+
+    private void CancelSource(CancellationTokenSource source)
+    {
+        if (source != null)
+        {
+            source?.Cancel();
+        }
+    }
+
+    public void Cancel()
+    {
+        CancelSource(_fadeSource);
+        CancelSource(_typeSource);
+    }
+
+    public void Dispose()
+    {
+        _fadeSource?.Dispose();
+        _typeSource?.Dispose();
+        _blinkSource?.Dispose();
+    }
+
+    public async UniTask<bool> Complete()
+    {
+        var busy = _isTyping;
+
+        if (busy)
+        {
+            CancelSource(_fadeSource);
+            CancelSource(_typeSource);
+
+            await UniTask.WaitUntil(() => !_isTyping);
+
+            _targetLabel.maxVisibleCharacters = _targetLabel.text.Length;
+            _canvas.alpha = 1f;
+
+            _blinkSource = new();
+            StartBlinking(_blinkSource).Forget();
+        }
+
+        return busy;
+    }
+
+    private void OnDisable()
+    {
+        Cancel();
+        Dispose();
+    }
+
+    private void OnDrawGizmos() {
+        Gizmos.color = _isTyping ? Color.green : Color.red;
+        Gizmos.DrawSphere(transform.position, 1f);
     }
 }

@@ -18,7 +18,6 @@ public class Interactable : MonoBehaviour
 
     public void Activate()
     {
-        Debug.Log("activate");
         if (_disableSelf)
             gameObject.SetActive(false);
         

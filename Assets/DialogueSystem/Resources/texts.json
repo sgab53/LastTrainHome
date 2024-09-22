@@ -1,14 +1,150 @@
-{
+{"_data":{
+    "SC16_Interfono": {
+        "it": "Ultima chiamata per il treno delle 20:50",
+        "en": ""
+    },
+    "SC16_Maya": {
+        "it": "Sì, lo so. Non sarei mai dovuta venire qui.",
+        "en": ""
+    },
+    "SC15_Interfono": {
+        "it": "Ultimo treno delle 20:50. Si pregano i passeggeri di affrettarsi.",
+        "en": ""
+    },
+    "SC14_Maya": {
+        "it": "Addio per sempre… Si torna a casa.",
+        "en": ""
+    },
+    "SC13_Interfono": {
+        "it": "Il treno delle 20:50 è in arrivo al binario 1, allontanarsi dalla linea gialla.",
+        "en": ""
+    },
+    "SC11_Maya2": {
+        "it": "Aaah",
+        "en": ""
+    },
+    "SC11_Mostro2": {
+        "it": "VRAAAHH-Hhng-ghnn—",
+        "en": ""
+    },
+    "SC11_Maya1": {
+        "it": "Lasciami in pace!!",
+        "en": ""
+    },
+    "SC11_Mostro1": {
+        "it": "VVVRRRRRAAAAAAHHGG!!",
+        "en": ""
+    },
+    "SC11_P1": {
+        "it": "Quella leva dovrebbe riattivare le luci!",
+        "en": ""
+    },
+    "SC10_Mostro": {
+        "it": "VRAAAAHGG!",
+        "en": ""
+    },
+    "SC10_Rumore": {
+        "it": "STOMP!",
+        "en": ""
+    },
+    "SC9_Nota4": {
+        "it": "Nuova PW: 73628",
+        "en": ""
+    },
+    "SC9_Nota3": {
+        "it": "Ultimo articolo blog: come sarà la vita nel 2050?",
+        "en": ""
+    },
+    "SC9_Nota2": {
+        "it": "Spesa nuovo pc: 2.050€",
+        "en": ""
+    },
+    "SC9_Nota1": {
+        "it": "Una to do list completa tranne per l’ultima voce: ",
+        "en": ""
+    },
+    "SC8_P1": {
+        "it": "Devo riattivare la corrente prima.",
+        "en": ""
+    },
+    "SC7_P2": {
+        "it": "…",
+        "en": ""
+    },
+    "SC7_P1": {
+        "it": "Ah!!",
+        "en": ""
+    },
+    "SC7_P4": {
+        "it": "Non ci torno lì.",
+        "en": ""
+    },
+    "SC7_P3": {
+        "it": " Sto impazzendo.",
+        "en": ""
+    },
+    "SC6_P2": {
+        "it": "!!!",
+        "en": ""
+    },
+    "SC6_P1": {
+        "it": "Una chiave elettronica. Potrebbe essere quella che apre il portone della stazione.",
+        "en": ""
+    },
+    "SC6_P3": {
+        "it": "C’è un lucchetto. Non posso aprirla ora.",
+        "en": ""
+    },
+    "SC5_P3": {
+        "it": "Una chiave! Fantastico.",
+        "en": ""
+    },
+    "SC5_P2": {
+        "it": "Dovrà pur esserci una chiave.",
+        "en": ""
+    },
+    "SC5_P1": {
+        "it": "Devo trovare un modo per andarmene di qui!",
+        "en": ""
+    },
+    "SC5_Maya": {
+        "it": "Aiuto! Ah… ah… ma cos’era quello?!",
+        "en": ""
+    },
+    "SC4_P6": {
+        "it": "Ahhhhhhhh!",
+        "en": ""
+    },
+    "SC4_P5": {
+        "it": "Forse posso trovare un’altra uscita.",
+        "en": ""
+    },
+    "SC4_P4": {
+        "it": "Okay, è solo un blackout, non agitarti…",
+        "en": ""
+    },
+    "SC4_P3": {
+        "it": "Ahhh!",
+        "en": ""
+    },
+    "SC4_P2": {
+        "it": "Serve una chiave elettronica. E adesso che faccio? Non ci capisco niente di tecnologia.",
+        "en": ""
+    },
+    "SC4_P1": {
+        "it": "Non è possibile! Apriti, per favore…",
+        "en": ""
+    },
     "SC2_P4": {
         "it": "Chiusa, niente da fare.",
         "en": ""
     },
     "SC2_P3": {
-        "it": "Anche questo orologio � fermo.",
+        "it": "Anche questo orologio è fermo.",
         "en": ""
     },
     "SC2_P2": {
-        "it": "Non c�� nessuno.",
+        "it": "Non c’è nessuno.",
         "en": ""
     },
     "SC2_P1": {
@@ -16,7 +152,7 @@
         "en": ""
     },
     "SC1_Interfono": {
-        "it": "In arrivo tra un minuto l�ultimo treno per XXX al binario 1",
+        "it": "In arrivo tra un minuto l’ultimo treno per XXX al binario 1",
         "en": ""
     },
     "SC1_P7": {
@@ -24,15 +160,15 @@
         "en": ""
     },
     "SC1_P6": {
-        "it": "In ogni caso il treno � in ritardo, meglio andare a chiedere a qualcuno. Se non lo prendo poi�",
+        "it": "In ogni caso il treno è in ritardo, meglio andare a chiedere a qualcuno. Se non lo prendo poi…",
         "en": ""
     },
     "SC1_P5": {
-        "it": "Si � rotto l�orologio? Anche il cellulare�",
+        "it": "Si è rotto l’orologio? Anche il cellulare…",
         "en": ""
     },
     "SC1_P4": {
-        "it": "Ma cosa� sempre le 20:49?",
+        "it": "Ma cosa… sempre le 20:49?",
         "en": ""
     },
     "SC1_P3": {
@@ -40,12 +176,12 @@
         "en": ""
     },
     "SC1_P2": {
-        "it": "Strano�",
-        "en": "Strange�"
+        "it": "Strano…",
+        "en": "Strange…"
     },
     "SC1_P1": {
-        "it": "�",
-        "en": "�"
+        "it": "…",
+        "en": "…"
     },
     "first_sms": {
         "it": "Dove sei?",
@@ -55,4 +191,5 @@
         "it": "Inizia gioco",
         "en": "start game"
     }
+}
 }

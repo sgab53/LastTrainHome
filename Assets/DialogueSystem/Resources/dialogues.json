@@ -1,10 +1,14 @@
-{
-    "Scena 2": {
-        "testi": []
-    },
-    "Scena 1": {
-        "testi": [
-            "SC1_Interfono",
+{"_data":{
+    "Scena 4": [
+            "SC4_P1",
+            "SC4_P2",
+            "SC4_P3",
+            "SC4_P4",
+            "SC4_P5",
+            "SC4_P6"
+        ]
+    ,
+    "Scena 1": [
             "SC1_P1",
             "SC1_P2",
             "SC1_P3",
@@ -13,5 +17,5 @@
             "SC1_P6",
             "SC1_P7"
         ]
-    }
+}
 }

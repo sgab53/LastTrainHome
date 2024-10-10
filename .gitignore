@@ -73,3 +73,6 @@ crashlytics-build.properties
 
 .vscode
 tools/secrets.json
+
+# Rider directories
+.idea

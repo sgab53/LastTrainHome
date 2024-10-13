@@ -13,6 +13,7 @@ namespace Player
         [SerializeField] private CharacterController _controller;
         [SerializeField] private Transform _cameraTransform;
         [SerializeField] private float _moveSpeed = 5f;
+        [SerializeField] private LayerMask _groundLayers;
 
         private Vector2 _movement;
         private readonly RaycastHit[] _hits = new RaycastHit[8];
@@ -32,7 +33,7 @@ namespace Player
         private void Update()
         {
             var hitCount = Physics.SphereCastNonAlloc(transform.position + (transform.up * _controller.height),
-                _controller.radius, -transform.up, _hits, _controller.height * 2f);
+                _controller.radius, -transform.up, _hits, _controller.height * 2f, _groundLayers);
 
             var contact = Vector3.zero;
             var normal = Vector3.zero;

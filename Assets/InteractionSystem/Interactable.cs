@@ -1,8 +1,9 @@
+using LTH.Core.Services;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.EventSystems;
 
-namespace InteractionSystem
+namespace LTH.InteractionSystem
 {
     [RequireComponent(typeof(Collider))]
     public class Interactable : MonoBehaviour,
@@ -12,16 +13,31 @@ namespace InteractionSystem
         [SerializeField] private UnityEvent _onSelected;
         [SerializeField] private UnityEvent _onDeselected;
 
-        private float _priority, _priorityMod;
-        public float Priority => _priority + _priorityMod;
+        private InteractionService _interactionService;
 
         public UnityEvent OnInteractedEvent => _onInteracted;
         public UnityEvent OnSelectedEvent => _onSelected;
         public UnityEvent OnDeselectedEvent => _onDeselected;
 
-        private void Awake()
+        private void OnEnable()
         {
-            _priority = _priorityMod = 0f;
+            if (!_interactionService)
+                _interactionService = ServiceLocator.Instance.GetService<InteractionService>();
+
+            _interactionService.AddInteractable(gameObject, this);
+        }
+
+        private void OnDisable()
+        {
+            if (!_interactionService)
+                return;
+
+            _interactionService.RemoveInteractable(gameObject);
+        }
+
+        private void OnDestroy()
+        {
+            _interactionService = null;
         }
 
         public void Interact()
@@ -41,14 +57,15 @@ namespace InteractionSystem
 
         public void OnPointerEnter(PointerEventData eventData)
         {
-            _priorityMod = 9999f;
-            Select();
+            _interactionService.ForceTarget(this);
+            _interactionService.SwapTargetIfValid(gameObject);
+
         }
 
         public void OnPointerExit(PointerEventData eventData)
         {
-            _priorityMod = 0f;
-            Deselect();
+            _interactionService.UnsetForcedTarget();
+            _interactionService.UnsetTarget();
         }
 
         public void OnPointerDown(PointerEventData eventData)
@@ -56,7 +73,7 @@ namespace InteractionSystem
             switch (eventData.button)
             {
                 case PointerEventData.InputButton.Left:
-                    Interact();
+                    _interactionService.InteractWithSelectedTarget();
                     break;
                 case PointerEventData.InputButton.Right: // unused
                     break;

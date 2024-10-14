@@ -1,16 +1,20 @@
+using LTH.Core.Services;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
-namespace InteractionSystem
+namespace LTH.InteractionSystem
 {
     public class Interactor : MonoBehaviour
     {
         [SerializeField] private InputActionReference _interact;
+
+        [Header("Parameters")]
         [SerializeField] private float _interactionRadius = 3f;
         [SerializeField] private LayerMask interactableLayers;
 
+        private InteractionService _interactionService;
+
         private readonly Collider[] _hits = new Collider[8];
-        private Interactable _target;
 
         private void OnEnable()
         {
@@ -22,12 +26,14 @@ namespace InteractionSystem
             _interact.action.performed -= OnInteractActionPerformed;
         }
 
+        private void Start()
+        {
+            _interactionService = ServiceLocator.Instance.GetService<InteractionService>();
+        }
+
         private void OnInteractActionPerformed(InputAction.CallbackContext _)
         {
-            if (!_target)
-                return;
-
-            _target.Interact();
+            _interactionService.InteractWithSelectedTarget();
         }
 
         private void Update()
@@ -37,7 +43,7 @@ namespace InteractionSystem
 
             if (count <= 0)
             {
-                SwapTarget(null);
+                _interactionService.UnsetTarget();
                 return;
             }
 
@@ -45,20 +51,11 @@ namespace InteractionSystem
 
             if (!nearest)
             {
-                SwapTarget(null);
+                _interactionService.UnsetTarget();
                 return;
             }
 
-            if (!_target)
-            {
-                SwapTarget((Interactable)nearest.GetComponent(typeof(Interactable)));
-                return;
-            }
-
-            if (_target.gameObject == nearest.gameObject)
-                return;
-
-            SwapTarget((Interactable)nearest.GetComponent(typeof(Interactable)));
+            _interactionService.SwapTargetIfValid(nearest.gameObject);
         }
 
         private Collider FindNearest(int count)
@@ -71,21 +68,14 @@ namespace InteractionSystem
                 var c = _hits[i];
                 var dist = (c.transform.position - transform.position).sqrMagnitude;
 
-                if (dist < closestDist)
-                {
-                    closestDist = dist;
-                    nearest = c;
-                }
+                if (dist >= closestDist)
+                    continue;
+
+                closestDist = dist;
+                nearest = c;
             }
 
             return nearest;
-        }
-
-        private void SwapTarget(Interactable newTarget)
-        {
-            _target?.Deselect();
-            _target = newTarget;
-            _target?.Select();
         }
     }
 }

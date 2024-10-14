@@ -11,7 +11,8 @@ namespace Player
         [SerializeField] private float _moveSpeed = 5f;
         [SerializeField] private LayerMask _groundLayers;
 
-        private Vector2 _movement;
+        private Vector2 _movement = Vector2.zero;
+        private Vector3 _direction = Vector3.zero;
         private readonly RaycastHit[] _hits = new RaycastHit[8];
 
         private void OnEnable()
@@ -52,13 +53,13 @@ namespace Player
             var forward = Vector3.Normalize(Vector3.Cross(_cameraTransform.right, normal));
             var right = Vector3.Normalize(Vector3.Cross(normal, _cameraTransform.forward));
 
-            var direction = forward * _movement.y + right * _movement.x;
+            _direction = forward * _movement.y + right * _movement.x;
 
             if (_movement.sqrMagnitude > 1f)
-                direction.Normalize();
+                _direction.Normalize();
 
             if (_controller.isGrounded)
-                _controller.Move(direction * (_moveSpeed * Time.deltaTime));
+                _controller.Move(_direction * (_moveSpeed * Time.deltaTime));
             else
                 _controller.Move(Vector3.down * (_moveSpeed * Time.deltaTime));
         }

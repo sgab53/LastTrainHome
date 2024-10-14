@@ -2,6 +2,8 @@
     "name": "InteractionSystem",
     "rootNamespace": "",
     "references": [
+        "GUID:361206fd282dd054e87d29df4f363c62",
+        "GUID:73295f9e984d9964497f318a6b4f6f62",
         "GUID:75469ad4d38634e559750d17036d5f7c"
     ],
     "includePlatforms": [],

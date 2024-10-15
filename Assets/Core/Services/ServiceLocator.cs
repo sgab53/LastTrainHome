@@ -4,9 +4,11 @@ using UnityEngine;
 
 namespace LTH.Core.Services
 {
-    public class ServiceLocator : Singleton<ServiceLocator>
+    public sealed class ServiceLocator : Singleton<ServiceLocator>
     {
         private readonly Dictionary<Type, IService> _services = new();
+
+        public event Action Destroyed;
 
         protected override void Awake()
         {
@@ -43,7 +45,11 @@ namespace LTH.Core.Services
 
             return (T)service;
         }
-    }
 
-    public interface IService {}
+        protected override void OnDestroy()
+        {
+            Destroyed?.Invoke();
+            base.OnDestroy();
+        }
+    }
 }

@@ -1,26 +1,20 @@
 using System;
 using System.Collections.Generic;
-using JetBrains.Annotations;
 using LTH.Core.Services;
 using UnityEngine;
 
 namespace LTH.InteractionSystem
 {
-    public class InteractionService : MonoBehaviour, IService
+    public sealed class InteractionService : AService<InteractionService>
     {
         private readonly Dictionary<GameObject, Interactable> _interactables = new();
 
         private Interactable _target, _forcedTarget;
 
-        private void Awake()
-        {
-            ServiceLocator.Instance.RegisterService(this);
-        }
-
-        private void OnDestroy()
+        protected override void OnDestroy()
         {
             _interactables.Clear();
-            ServiceLocator.Instance.UnregisterService<InteractionService>();
+            base.OnDestroy();
         }
 
         public void AddInteractable(GameObject key, Interactable value) => _interactables.Add(key, value);
@@ -55,13 +49,16 @@ namespace LTH.InteractionSystem
 
         public void InteractWithSelectedTarget()
         {
+            if (!_target)
+                return;
+
             if (_forcedTarget)
             {
                 _forcedTarget.Interact();
                 return;
             }
 
-            _target?.Interact();
+            _target.Interact();
         }
 
         public void ForceTarget(Interactable interactable)
@@ -72,6 +69,15 @@ namespace LTH.InteractionSystem
         public void UnsetForcedTarget()
         {
             _forcedTarget = null;
+        }
+
+        private void OnGUI()
+        {
+            GUI.color = Color.red;
+            GUI.Label(new Rect(10, 10, 300, 48), $"Target: {_target?.gameObject.name}");
+
+            GUI.color = Color.green;
+            GUI.Label(new Rect(10, 64, 300, 48), $"Forced Target: {_forcedTarget?.gameObject.name}");
         }
     }
 }

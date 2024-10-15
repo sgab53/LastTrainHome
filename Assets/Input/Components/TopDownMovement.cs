@@ -1,13 +1,16 @@
 using UnityEngine;
 using UnityEngine.InputSystem;
 
-namespace Player
+namespace LTH.Input
 {
     public class TopDownMovement : MonoBehaviour
     {
+        [Header("Component References")]
         [SerializeField] private InputActionReference _move;
         [SerializeField] private CharacterController _controller;
         [SerializeField] private Transform _cameraTransform;
+
+        [Header("Movement Settings")]
         [SerializeField] private float _moveSpeed = 5f;
         [SerializeField] private LayerMask _groundLayers;
 
@@ -32,17 +35,14 @@ namespace Player
             var hitCount = Physics.SphereCastNonAlloc(transform.position + (transform.up * _controller.height),
                 _controller.radius, -transform.up, _hits, _controller.height * 2f, _groundLayers);
 
-            var contact = Vector3.zero;
             var normal = Vector3.zero;
 
             if (hitCount > 0 && _controller.isGrounded)
             {
                 for (var i = 0; i < hitCount; ++i)
                 {
-                    contact += _hits[i].point;
                     normal += _hits[i].normal;
                 }
-                contact /= hitCount;
                 normal.Normalize();
             }
             else

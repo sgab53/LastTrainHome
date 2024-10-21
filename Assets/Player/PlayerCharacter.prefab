@@ -214,7 +214,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _animator: {fileID: 3069064033008504853}
   _chargeDuration: 60
-  _state: 0
 --- !u!1 &4609311864331287555
 GameObject:
   m_ObjectHideFlags: 0
@@ -255,7 +254,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4609311864331287555}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 198e7cb482c53904a90ce9a52b3a770d, type: 3}
   m_Name: 

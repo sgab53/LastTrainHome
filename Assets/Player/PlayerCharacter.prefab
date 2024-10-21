@@ -93,6 +93,8 @@ GameObject:
   m_Component:
   - component: {fileID: 6309214837505043430}
   - component: {fileID: 6293383782828463526}
+  - component: {fileID: 3069064033008504853}
+  - component: {fileID: 5419379470178079217}
   m_Layer: 0
   m_Name: Spot Light
   m_TagString: Untagged
@@ -122,12 +124,12 @@ Light:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3989690452202308202}
-  m_Enabled: 1
+  m_Enabled: 0
   serializedVersion: 10
   m_Type: 0
   m_Shape: 0
   m_Color: {r: 1, g: 1, b: 1, a: 1}
-  m_Intensity: 1
+  m_Intensity: 0
   m_Range: 8
   m_SpotAngle: 90
   m_InnerSpotAngle: 9
@@ -177,6 +179,42 @@ Light:
   m_UseViewFrustumForShadowCasterCull: 1
   m_ShadowRadius: 0
   m_ShadowAngle: 0
+--- !u!95 &3069064033008504853
+Animator:
+  serializedVersion: 5
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3989690452202308202}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: f67daecd6989f6341bbda35067131d90, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorStateOnDisable: 0
+  m_WriteDefaultValuesOnDisable: 0
+--- !u!114 &5419379470178079217
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3989690452202308202}
+  m_Enabled: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 16ea29663579dd942b0cc893f2e44518, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _animator: {fileID: 3069064033008504853}
+  _chargeDuration: 60
+  _state: 0
 --- !u!1 &4609311864331287555
 GameObject:
   m_ObjectHideFlags: 0
@@ -187,14 +225,13 @@ GameObject:
   m_Component:
   - component: {fileID: 3604457022750810714}
   - component: {fileID: 2470317395132838267}
-  - component: {fileID: 4401070833117835472}
   m_Layer: 0
   m_Name: FlashlightOrigin
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &3604457022750810714
 Transform:
   m_ObjectHideFlags: 0
@@ -225,34 +262,13 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _aimRotation: {fileID: 7290320666169357467, guid: 400914c8b231b69478a23a1502905541, type: 3}
   _aimPosition: {fileID: 3823095525440173240, guid: 400914c8b231b69478a23a1502905541, type: 3}
+  _flashlightToggle: {fileID: -3146917100022763248, guid: 400914c8b231b69478a23a1502905541, type: 3}
+  _flashlight: {fileID: 5419379470178079217}
   _camera: {fileID: 0}
   _origin: {fileID: 3604457022750810714}
-  _animator: {fileID: 4401070833117835472}
-  _chargeDuration: 60
   _targetLayers:
     serializedVersion: 2
     m_Bits: 256
---- !u!95 &4401070833117835472
-Animator:
-  serializedVersion: 5
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4609311864331287555}
-  m_Enabled: 1
-  m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 9100000, guid: f67daecd6989f6341bbda35067131d90, type: 2}
-  m_CullingMode: 0
-  m_UpdateMode: 0
-  m_ApplyRootMotion: 0
-  m_LinearVelocityBlending: 0
-  m_StabilizeFeet: 0
-  m_WarningMessage: 
-  m_HasTransformHierarchy: 1
-  m_AllowConstantClipSamplingOptimization: 1
-  m_KeepAnimatorStateOnDisable: 0
-  m_WriteDefaultValuesOnDisable: 0
 --- !u!1 &7440394516026946290
 GameObject:
   m_ObjectHideFlags: 0

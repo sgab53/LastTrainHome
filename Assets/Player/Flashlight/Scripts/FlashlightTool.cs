@@ -1,6 +1,5 @@
 using System;
 using UnityEngine;
-using UnityEngine.InputSystem;
 
 namespace LTH.Player.Components
 {
@@ -14,7 +13,8 @@ namespace LTH.Player.Components
 
         [Header("Parameters")]
         [SerializeField] private float _chargeDuration = 60f;
-        [SerializeField] private FlashlightState _state = FlashlightState.Off;
+
+        private FlashlightState _state;
 
         private float _startTime;
         private float _currentCharge, _remainingCharge;
@@ -48,21 +48,6 @@ namespace LTH.Player.Components
         {
             Charge = _chargeDuration;
             _remainingCharge = 0;
-
-            var light = (Light)GetComponent(typeof(Light));
-            switch (_state)
-            {
-                case FlashlightState.Off:
-                    light.intensity = 0;
-                    this.enabled = light.enabled = false;
-                    break;
-                case FlashlightState.On:
-                    light.intensity = 1;
-                    this.enabled = light.enabled = true;
-                    break;
-                default:
-                    throw new ArgumentOutOfRangeException();
-            }
         }
 
         private void Update()
@@ -82,7 +67,25 @@ namespace LTH.Player.Components
             Discharge();
         }
 
-        public void Toggle(InputAction.CallbackContext ctx)
+        public void SetState(FlashlightState state)
+        {
+            var light = (Light)GetComponent(typeof(Light));
+            switch (state)
+            {
+                case FlashlightState.Off:
+                    light.intensity = 0;
+                    this.enabled = light.enabled = false;
+                    break;
+                case FlashlightState.On:
+                    light.intensity = 1;
+                    this.enabled = light.enabled = true;
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException();
+            }
+        }
+
+        public FlashlightState Toggle()
         {
             switch (_state)
             {
@@ -95,6 +98,8 @@ namespace LTH.Player.Components
                 default:
                     break;
             }
+
+            return _state;
         }
 
         private void Discharge()
@@ -137,10 +142,10 @@ namespace LTH.Player.Components
         {
             ++Batteries;
         }
+    }
 
-        private enum FlashlightState
-        {
-            Off = 0, On = 1
-        }
+    public enum FlashlightState
+    {
+        Off = 0, On = 1
     }
 }

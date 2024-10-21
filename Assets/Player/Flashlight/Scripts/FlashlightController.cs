@@ -14,7 +14,7 @@ namespace LTH.Player.Components
         [SerializeField] private Camera _camera;
         [SerializeField] private Transform _origin;
 
-        [Header("Pointer Raycast")]
+        [Header("Settings")]
         [SerializeField] private LayerMask _targetLayers;
 
         private readonly RaycastHit[] _hits = new RaycastHit[8];
@@ -31,14 +31,23 @@ namespace LTH.Player.Components
         {
             _aimRotation.action.performed += GetAimFromRotation;
             _aimPosition.action.performed += GetAimFromPosition;
-            _flashlightToggle.action.performed += _flashlight.Toggle;
+        }
+
+        private void Awake()
+        {
+            _flashlightToggle.action.performed += ToggleFlashlight;
+            _flashlight.SetState(FlashlightState.Off);
         }
 
         private void OnDisable()
         {
             _aimRotation.action.performed -= GetAimFromRotation;
             _aimPosition.action.performed -= GetAimFromPosition;
-            _flashlightToggle.action.performed -= _flashlight.Toggle;
+        }
+
+        private void OnDestroy()
+        {
+            _flashlightToggle.action.performed -= ToggleFlashlight;
         }
 
         private void GetAimFromRotation(InputAction.CallbackContext ctx)
@@ -50,21 +59,19 @@ namespace LTH.Player.Components
 
         private void GetAimFromPosition(InputAction.CallbackContext ctx)
         {
-            Vector3 screenPos = ctx.ReadValue<Vector2>();
-            screenPos.z = _camera.farClipPlane;
+            var screenPos = ctx.ReadValue<Vector2>();
+            var ray = _camera.ScreenPointToRay(screenPos, Camera.MonoOrStereoscopicEye.Mono);
 
-            var start = _camera.transform.position;
-            var dir = Vector3.Normalize(_camera.ScreenToWorldPoint(screenPos, Camera.MonoOrStereoscopicEye.Mono) - start);
-
-            var count = Physics.RaycastNonAlloc(start, dir, _hits, 100f, _targetLayers, QueryTriggerInteraction.Ignore);
-
-            if (count <= 0)
+            if (Physics.RaycastNonAlloc(ray, _hits, 100f, _targetLayers, QueryTriggerInteraction.Ignore) <= 0)
                 return;
 
-            _direction = _hits[0].point - _origin.position;
-            _direction.y = 0f;
-            _direction.Normalize();
+            _direction = Vector3.ProjectOnPlane(_hits[0].point - _origin.position, _origin.up);
             _origin.LookAt(_origin.position + _direction, _origin.up);
+        }
+
+        private void ToggleFlashlight(InputAction.CallbackContext _)
+        {
+            _flashlight.Toggle();
         }
     }
 }

@@ -70,14 +70,5 @@ namespace LTH.InteractionSystem
         {
             _forcedTarget = null;
         }
-
-        private void OnGUI()
-        {
-            GUI.color = Color.red;
-            GUI.Label(new Rect(10, 10, 300, 48), $"Target: {_target?.gameObject.name}");
-
-            GUI.color = Color.green;
-            GUI.Label(new Rect(10, 64, 300, 48), $"Forced Target: {_forcedTarget?.gameObject.name}");
-        }
     }
 }

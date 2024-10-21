@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<UXML
+    name="FlashlightInfo"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns="UnityEngine.UIElements"
+    xsi:noNamespaceSchemaLocation="../../../../UIElementsSchema/UIElements.xsd"
+>
+    <Style src="FlashlightInfo.uss"/>
+
+    <VisualElement name="FlashlightContainer">
+        <Label name="BatteriesCount" text="00"/>
+        <VisualElement name="ChargeBarContainer">
+            <VisualElement name="ChargeBarBackground">
+                <VisualElement name="ChargeBar"/>
+            </VisualElement>
+        </VisualElement>
+    </VisualElement>
+    
+</UXML>

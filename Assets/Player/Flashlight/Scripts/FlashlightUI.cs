@@ -6,7 +6,7 @@ namespace LTH.Player.Components
 {
     public class FlashlightUI : MonoBehaviour
     {
-        [SerializeField] private FlashlightController _controller;
+        [SerializeField] private FlashlightTool _flashlight;
 
         [Header("UI Elements")]
         [SerializeField] private UIDocument _document;
@@ -20,14 +20,14 @@ namespace LTH.Player.Components
 
         private void OnEnable()
         {
-            _controller.ChargeChanged += OnChargeChanged;
-            _controller.BatteriesChanged += OnBatteriesChanged;
+            _flashlight.ChargeChanged += OnChargeChanged;
+            _flashlight.BatteriesChanged += OnBatteriesChanged;
         }
 
         private void OnDisable()
         {
-            _controller.ChargeChanged -= OnChargeChanged;
-            _controller.BatteriesChanged -= OnBatteriesChanged;
+            _flashlight.ChargeChanged -= OnChargeChanged;
+            _flashlight.BatteriesChanged -= OnBatteriesChanged;
         }
 
         private void OnChargeChanged(float percentage)

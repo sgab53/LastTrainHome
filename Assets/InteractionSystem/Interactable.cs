@@ -19,7 +19,7 @@ namespace LTH.InteractionSystem
         public UnityEvent OnSelectedEvent => _onSelected;
         public UnityEvent OnDeselectedEvent => _onDeselected;
 
-        private void OnEnable()
+        protected virtual void OnEnable()
         {
             if (!_interactionService)
                 _interactionService = ServiceLocator.Instance.GetService<InteractionService>();
@@ -27,7 +27,7 @@ namespace LTH.InteractionSystem
             _interactionService.AddInteractable(gameObject, this);
         }
 
-        private void OnDisable()
+        protected virtual void OnDisable()
         {
             if (!_interactionService)
                 return;
@@ -35,22 +35,22 @@ namespace LTH.InteractionSystem
             _interactionService.RemoveInteractable(gameObject);
         }
 
-        private void OnDestroy()
+        protected virtual void OnDestroy()
         {
             _interactionService = null;
         }
 
-        public void Interact()
+        public virtual void Interact()
         {
             _onInteracted?.Invoke();
         }
 
-        public void Select()
+        public virtual void Select()
         {
             _onSelected?.Invoke();
         }
 
-        public void Deselect()
+        public virtual void Deselect()
         {
             _onDeselected?.Invoke();
         }
@@ -59,7 +59,6 @@ namespace LTH.InteractionSystem
         {
             _interactionService.ForceTarget(this);
             _interactionService.SwapTargetIfValid(gameObject);
-
         }
 
         public void OnPointerExit(PointerEventData eventData)

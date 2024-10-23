@@ -116,9 +116,9 @@ namespace LTH.Player.Components
             _startTime = Time.realtimeSinceStartup;
         }
 
-        public void TurnOn()
+        private void TurnOn()
         {
-            if (_state == FlashlightState.On && _currentCharge <= 0f && Batteries <= 0)
+            if (_state == FlashlightState.On || (_currentCharge <= 0f && Batteries <= 0))
                 return;
 
             this.enabled = true;
@@ -127,7 +127,7 @@ namespace LTH.Player.Components
             _animator.SetTrigger(TurnOnTrigger);
         }
 
-        public void TurnOff()
+        private void TurnOff()
         {
             if (_state == FlashlightState.Off)
                 return;

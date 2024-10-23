@@ -3,6 +3,7 @@ using UnityEngine;
 
 namespace LTH.Player.Components
 {
+    [RequireComponent(typeof(Light))]
     public class FlashlightTool : MonoBehaviour
     {
         public event Action<float> ChargeChanged;
@@ -10,6 +11,7 @@ namespace LTH.Player.Components
 
         [Header("References")]
         [SerializeField] private Animator _animator;
+        [SerializeField] private Light _light;
 
         [Header("Parameters")]
         [SerializeField] private float _chargeDuration = 60f;
@@ -69,16 +71,15 @@ namespace LTH.Player.Components
 
         public void SetState(FlashlightState state)
         {
-            var light = (Light)GetComponent(typeof(Light));
             switch (state)
             {
                 case FlashlightState.Off:
-                    light.intensity = 0;
-                    this.enabled = light.enabled = false;
+                    _light.intensity = 0;
+                    this.enabled = _light.enabled = false;
                     break;
                 case FlashlightState.On:
-                    light.intensity = 1;
-                    this.enabled = light.enabled = true;
+                    _light.intensity = 1;
+                    this.enabled = _light.enabled = true;
                     break;
                 default:
                     throw new ArgumentOutOfRangeException();

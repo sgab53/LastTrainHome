@@ -213,6 +213,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _animator: {fileID: 3069064033008504853}
+  _light: {fileID: 6293383782828463526}
   _chargeDuration: 60
 --- !u!1 &4609311864331287555
 GameObject:
@@ -254,7 +255,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4609311864331287555}
-  m_Enabled: 0
+  m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 198e7cb482c53904a90ce9a52b3a770d, type: 3}
   m_Name: 

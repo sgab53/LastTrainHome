@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <UXML
-    name="FlashlightInfo"
+    name="GameplayMain"
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xmlns="UnityEngine.UIElements"
     xmlns:LTH="LTH.UI"
@@ -9,5 +9,5 @@
     <Style src="GameplayMainUI.uss"/>
 
     <LTH:FlashlightInfo name="FlashlightInfo"/>
-    
+
 </UXML>

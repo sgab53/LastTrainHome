@@ -16,8 +16,20 @@ namespace LTH.InteractionSystem
             base.OnDestroy();
         }
 
-        public void AddInteractable(GameObject key, Interactable value) => _interactables.Add(key, value);
-        public void RemoveInteractable(GameObject key) => _interactables.Remove(key);
+        public void AddInteractable(GameObject key, Interactable value)
+        {
+            _interactables.Add(key, value);
+        }
+        public void RemoveInteractable(GameObject key)
+        {
+            if (_target?.gameObject == key)
+                _target = null;
+
+            if (_forcedTarget?.gameObject == key)
+                _forcedTarget = null;
+
+            _interactables.Remove(key);
+        }
 
         private void SwapTarget(Interactable interactable)
         {

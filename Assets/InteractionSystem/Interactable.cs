@@ -24,6 +24,7 @@ namespace LTH.InteractionSystem
             if (!_interactionService)
                 _interactionService = ServiceLocator.Instance.GetService<InteractionService>();
 
+            gameObject.layer = LayerMask.NameToLayer("Interactable");
             _interactionService.AddInteractable(gameObject, this);
         }
 
@@ -33,6 +34,7 @@ namespace LTH.InteractionSystem
                 return;
 
             _interactionService.RemoveInteractable(gameObject);
+            gameObject.layer = LayerMask.NameToLayer("Default");
         }
 
         protected virtual void OnDestroy()

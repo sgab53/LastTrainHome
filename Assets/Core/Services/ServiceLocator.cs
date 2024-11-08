@@ -46,6 +46,11 @@ namespace LTH.Core.Services
             return (T)service;
         }
 
+        public IService GetService(Type serviceType)
+        {
+            return _services.GetValueOrDefault(serviceType);
+        }
+
         protected override void OnDestroy()
         {
             Destroyed?.Invoke();

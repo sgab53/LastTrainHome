@@ -1,4 +1,3 @@
-using UnityEngine;
 using UnityEngine.UIElements;
 
 namespace LTH.UI
@@ -10,8 +9,7 @@ namespace LTH.UI
 
         public FlashlightInfo()
         {
-            var asset = Resources.Load<VisualTreeAsset>(nameof(FlashlightInfo));
-            asset.CloneTree(this);
+            this.LoadVisualTreeAsset();
 
             _batteriesCount = this.Q<Label>("BatteriesCount");
             _chargeBar = this.Q<VisualElement>("ChargeBar");

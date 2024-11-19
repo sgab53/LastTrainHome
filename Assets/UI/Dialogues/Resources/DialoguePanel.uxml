@@ -1,15 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <UXML
-    name="GameplayMain"
+    name="DialoguePanel"
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xmlns="UnityEngine.UIElements"
-    xmlns:LTH="LTH.UI"
     xsi:noNamespaceSchemaLocation="../../../../UIElementsSchema/UIElements.xsd"
 >
-    <Style src="GameplayMainUI.uss"/>
+    <Style src="DialoguePanel.uss"/>
 
-    <LTH:FlashlightInfo name="FlashlightInfo"/>
-
-    <LTH:DialoguePanel name="DialoguePanel"/>
+    <VisualElement name="DialoguePanelBackground">
+        <Label name="DialogueText" text="Lorem ipsum"/>
+    </VisualElement>
 
 </UXML>

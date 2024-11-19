@@ -1,0 +1,31 @@
+:root {
+    width: 100%;
+    height: 128px;
+
+    transition-property: translate;
+    transition-duration: 1s;
+    transition-timing-function: ease-in-out;
+}
+
+:root.hidden {
+    translate: 0 150%;
+
+    transition-property: translate;
+    transition-duration: 1s;
+    transition-timing-function: ease-in-out;
+}
+
+#DialoguePanelBackground {
+    flex-grow: 1;
+
+    padding: 16px 256px 16px 256px;
+
+    background-color: rgba(0, 0, 0, 0.8);
+}
+
+#DialogueText {
+    flex-grow: 1;
+
+    font-size: 32px;
+    color: white;
+}

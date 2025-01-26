@@ -1,4 +1,3 @@
-using LTH.Core.Services;
 using LTH.InteractionSystem;
 using UnityEngine;
 
@@ -9,28 +8,22 @@ namespace LTH.DialogueSystem
         [SerializeField] private DialogueEntry _dialogue;
         [SerializeField] private DialogueTriggerActivation _activation;
 
-        private DialogueService _dialogueService;
-
         public override void Interact()
         {
             base.Interact();
-            _dialogueService.StartDialogue(_dialogue);
+            DialogueService.StartDialogue(_dialogue);
             this.enabled = false;
         }
 
         private void Start()
         {
-            if (!_dialogueService)
-                _dialogueService = ServiceLocator.Instance.GetService<DialogueService>();
-
-            _dialogueService.RegisterTriggerCallback(OnDialogueEnded);
+            DialogueService.RegisterTriggerCallback(OnDialogueEnded);
         }
 
         protected override void OnDestroy()
         {
-            _dialogueService.UnregisterTriggerCallback(OnDialogueEnded);
+            DialogueService.UnregisterTriggerCallback(OnDialogueEnded);
             base.OnDestroy();
-            _dialogueService = null;
         }
 
         private void OnDialogueEnded()
@@ -43,7 +36,7 @@ namespace LTH.DialogueSystem
                     this.enabled = true;
                     break;
                 default:
-                    break;
+                    return;
             }
         }
 

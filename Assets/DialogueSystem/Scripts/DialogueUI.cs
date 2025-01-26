@@ -1,8 +1,8 @@
-using LTH.Core.Services;
 using LTH.UI;
 using UnityEngine;
 using UnityEngine.Localization.Tables;
 using UnityEngine.UIElements;
+using Action = System.Action;
 
 namespace LTH.DialogueSystem
 {
@@ -12,18 +12,18 @@ namespace LTH.DialogueSystem
 
         private DialoguePanel _dialoguePanel;
 
-        public void RegisterNextLineCallback(System.Action callback)
+        public void RegisterNextLineCallback(Action onNextLine)
         {
             _dialoguePanel.RegisterCallback<PointerDownEvent>(OnPointerDown);
             return;
 
             void OnPointerDown(PointerDownEvent _)
             {
-                callback!();
+                onNextLine!();
             }
         }
 
-        public void ShowDialoguePrompt()
+        public void ShowBeforeDialoguePrompt()
         {
             _dialoguePanel.Show();
         }
@@ -41,9 +41,7 @@ namespace LTH.DialogueSystem
         private void Start()
         {
             _dialoguePanel = _document.rootVisualElement.Q<DialoguePanel>();
-            var dialogueService = (DialogueService)ServiceLocator.Instance.GetService(typeof(DialogueService));
-
-            dialogueService.BindUI(this);
+            DialogueService.BindUI(this);
         }
     }
 }

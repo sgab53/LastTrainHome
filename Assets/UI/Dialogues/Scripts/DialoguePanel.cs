@@ -11,14 +11,14 @@ namespace LTH.UI
     {
         private readonly Label _dialogueLabel;
 
-        private string _currentText;
-        private int _typeTimeMs;
-
         private readonly LocalizedString _localizedContent = new();
         private readonly StringBuilder _stringBuilder = new();
         private CancellationTokenSource _typingSource;
 
         private const string HiddenUssClassName = "hidden";
+
+        private string _currentText;
+        private int _typeDelay;
 
         private bool _dialogueReady = false;
 
@@ -37,9 +37,12 @@ namespace LTH.UI
             _localizedContent.SetReference(table, entry);
         }
 
-        public void SetTypeTime(int ms)
+        public void SetTypeSpeed(int charsPerSecond)
         {
-            _typeTimeMs = ms;
+            if (charsPerSecond <= 0)
+                charsPerSecond = 5; //SEARCHME: get default speed from settings
+
+            _typeDelay = 1000 / charsPerSecond;
         }
 
         public void Show()
@@ -95,7 +98,7 @@ namespace LTH.UI
                 if (char.IsWhiteSpace(_currentText[i]))
                     continue;
 
-                await UniTask.Delay(_typeTimeMs, cancellationToken: _typingSource.Token);
+                await UniTask.Delay(_typeDelay, cancellationToken: _typingSource.Token);
 
                 _stringBuilder.Append(_currentText[i]);
                 _dialogueLabel.text = _stringBuilder.ToString();
@@ -110,9 +113,9 @@ namespace LTH.UI
 
         public new class UxmlTraits : VisualElement.UxmlTraits
         {
-            private readonly UxmlIntAttributeDescription _characterTypeTime = new()
+            private readonly UxmlIntAttributeDescription _charsPerSecond = new()
             {
-                name = "type-time-ms",
+                name = "chars-per-second",
                 defaultValue = 10
             };
 
@@ -121,7 +124,7 @@ namespace LTH.UI
                 base.Init(ve, bag, cc);
 
                 var dp = ve as DialoguePanel;
-                dp!._typeTimeMs = _characterTypeTime.GetValueFromBag(bag, cc);
+                dp!._typeDelay = 1000 / _charsPerSecond.GetValueFromBag(bag, cc);
             }
         }
     }

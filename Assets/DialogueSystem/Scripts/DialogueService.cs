@@ -5,36 +5,41 @@ namespace LTH.DialogueSystem
 {
     public sealed partial class DialogueService : AService<DialogueService>
     {
-        private readonly DialogueSequencer _sequencer = new();
+        private static readonly DialogueSequencer Sequencer = new();
 
-        public void BindUI(DialogueUI dialogue)
+        public static void BindUI(DialogueUI gui)
         {
-            _sequencer.DialogueInitialized += dialogue.ShowDialoguePrompt;
-            //_sequencer.DialogueStarted += dialogue.;
-            _sequencer.DialogueEnded += dialogue.HideDialoguePrompt;
-            _sequencer.NextLineChanged += dialogue.UpdateDialogueEntry;
+            Sequencer.BeforeDialogueStarted += gui.ShowBeforeDialoguePrompt;
+            //_sequencer.DialogueStarted += gui.;
+            Sequencer.DialogueEnded += gui.HideDialoguePrompt;
+            Sequencer.NextLineChanged += gui.UpdateDialogueEntry;
 
-            dialogue.RegisterNextLineCallback(NextLine);
+            gui.RegisterNextLineCallback(NextLine);
         }
 
-        public void RegisterTriggerCallback(Action callback)
+        public static void RegisterTriggerCallback(Action callback)
         {
-            _sequencer.DialogueEnded += callback;
+            Sequencer.DialogueEnded += callback;
         }
 
-        public void UnregisterTriggerCallback(Action callback)
+        public static void UnregisterTriggerCallback(Action callback)
         {
-            _sequencer.DialogueEnded -= callback;
+            Sequencer.DialogueEnded -= callback;
         }
 
-        public void StartDialogue(DialogueEntry entry)
+        public static void StartDialogue(DialogueEntry entry)
         {
-            _sequencer.StartDialogue(entry);
+            Sequencer.LoadDialogue(entry);
         }
 
-        private void NextLine()
+        private static void NextLine()
         {
-            _sequencer.NextLine();
+            Sequencer.Next();
+        }
+
+        public static void Break()
+        {
+            Sequencer.ForceDialogueEnd();
         }
     }
 }

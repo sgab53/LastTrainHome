@@ -1,5 +1,4 @@
 using System;
-using System.Threading;
 using UnityEngine;
 using UnityEngine.Localization.Tables;
 
@@ -9,31 +8,27 @@ namespace LTH.DialogueSystem
     {
         private sealed class DialogueSequencer
         {
-            public event Action DialogueInitialized;
-            // public event Action DialogueStarted;
+            public event Action BeforeDialogueStarted;
+            public event Action DialogueStarted;
             public event Action DialogueEnded;
             public event Action<TableReference, TableEntryReference> NextLineChanged;
 
-            private DialogueEntry _dialogueEntry;
+            private DialogueEntry _currentDialogueEntry;
             private int _length;
             private int _currentLine;
 
-            private CancellationTokenSource _dialoguePreparationSource;
             private DialogueState _state = DialogueState.Unset;
 
-            public void StartDialogue(DialogueEntry dialogue)
+            public void LoadDialogue(DialogueEntry dialogue)
             {
                 if (_state == DialogueState.Busy)
                     return;
-
-                CancelDialoguePreparation();
-                _dialoguePreparationSource = new CancellationTokenSource();
 
                 _state = DialogueState.Busy;
                 PrepareDialogue(dialogue);
             }
 
-            public bool NextLine()
+            public bool Next()
             {
                 if (_state != DialogueState.Ready)
                     return false;
@@ -43,52 +38,46 @@ namespace LTH.DialogueSystem
                 if (++_currentLine >= _length)
                 {
                     DialogueEnded?.Invoke();
-                    _state = DialogueState.Ready;
+                    _state = DialogueState.Ended;
                     return false;
                 }
 
                 UpdateLine();
                 _state = DialogueState.Ready;
-
                 return true;
+            }
+
+            public void ForceDialogueEnd()
+            {
+                DialogueEnded?.Invoke();
+                _state = DialogueState.Ready;
             }
 
             private void UpdateLine()
             {
-                var current = _dialogueEntry[_currentLine];
+                var current = _currentDialogueEntry[_currentLine];
                 NextLineChanged?.Invoke(current.TableReference, current.TableEntryReference);
-            }
-
-            private void CancelDialoguePreparation()
-            {
-                if (_dialoguePreparationSource == null)
-                    return;
-
-                _dialoguePreparationSource.Cancel();
-                _dialoguePreparationSource.Dispose();
             }
 
             private void PrepareDialogue(DialogueEntry dialogue)
             {
-                DialogueInitialized?.Invoke();
-
-                CancelDialoguePreparation();
+                BeforeDialogueStarted?.Invoke();
 
                 if (dialogue.Length == 0)
                     Debug.LogError("Dialogue Entry is empty.");
 
-                _dialogueEntry = dialogue;
+                _currentDialogueEntry = dialogue;
                 _length = dialogue.Length;
                 _currentLine = 0;
 
-                // DialogueStarted?.Invoke();
+                DialogueStarted?.Invoke();
                 UpdateLine();
                 _state = DialogueState.Ready;
             }
 
-            private enum DialogueState
+            private enum DialogueState : byte
             {
-                Unset, Busy, Ready,
+                Unset, Busy, Ready, Ended
             }
         }
     }

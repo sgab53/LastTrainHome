@@ -26,7 +26,7 @@ namespace LTH.Input
     ""name"": ""StandardInputActions"",
     ""maps"": [
         {
-            ""name"": ""Character"",
+            ""name"": ""Default"",
             ""id"": ""1f588f05-9a18-40e2-91e8-74c352f12a39"",
             ""actions"": [
                 {
@@ -60,7 +60,7 @@ namespace LTH.Input
                     ""name"": ""UseTool"",
                     ""type"": ""Button"",
                     ""id"": ""7e82a8d4-f155-41e0-a712-fae27d670b6d"",
-                    ""expectedControlType"": ""Button"",
+                    ""expectedControlType"": """",
                     ""processors"": """",
                     ""interactions"": ""Press"",
                     ""initialStateCheck"": false
@@ -286,6 +286,34 @@ namespace LTH.Input
             ]
         },
         {
+            ""name"": ""Dialogue"",
+            ""id"": ""d84d2e1e-ed2c-4e1b-ac1d-1b5603f0b186"",
+            ""actions"": [
+                {
+                    ""name"": ""Next"",
+                    ""type"": ""Button"",
+                    ""id"": ""44b54628-c7a4-4348-b246-685caca8a552"",
+                    ""expectedControlType"": """",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                }
+            ],
+            ""bindings"": [
+                {
+                    ""name"": """",
+                    ""id"": ""28998094-088b-4795-b4c8-224b254bf274"",
+                    ""path"": ""*/{Submit}"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Keyboard&Mouse;Gamepad;Touch;Joystick;XR"",
+                    ""action"": ""Next"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                }
+            ]
+        },
+        {
             ""name"": ""UI"",
             ""id"": ""8bf86646-883c-49c4-a568-caba8ca64db1"",
             ""actions"": [
@@ -302,7 +330,7 @@ namespace LTH.Input
                     ""name"": ""Submit"",
                     ""type"": ""Button"",
                     ""id"": ""6478c196-7065-41c9-a870-8ef74bdf1725"",
-                    ""expectedControlType"": ""Button"",
+                    ""expectedControlType"": """",
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
@@ -804,14 +832,17 @@ namespace LTH.Input
     ],
     ""controlSchemes"": []
 }");
-            // Character
-            m_Character = asset.FindActionMap("Character", throwIfNotFound: true);
-            m_Character_Walk = m_Character.FindAction("Walk", throwIfNotFound: true);
-            m_Character_Action = m_Character.FindAction("Action", throwIfNotFound: true);
-            m_Character_MouseAction = m_Character.FindAction("MouseAction", throwIfNotFound: true);
-            m_Character_UseTool = m_Character.FindAction("UseTool", throwIfNotFound: true);
-            m_Character_AimRotation = m_Character.FindAction("AimRotation", throwIfNotFound: true);
-            m_Character_AimPosition = m_Character.FindAction("AimPosition", throwIfNotFound: true);
+            // Default
+            m_Default = asset.FindActionMap("Default", throwIfNotFound: true);
+            m_Default_Walk = m_Default.FindAction("Walk", throwIfNotFound: true);
+            m_Default_Action = m_Default.FindAction("Action", throwIfNotFound: true);
+            m_Default_MouseAction = m_Default.FindAction("MouseAction", throwIfNotFound: true);
+            m_Default_UseTool = m_Default.FindAction("UseTool", throwIfNotFound: true);
+            m_Default_AimRotation = m_Default.FindAction("AimRotation", throwIfNotFound: true);
+            m_Default_AimPosition = m_Default.FindAction("AimPosition", throwIfNotFound: true);
+            // Dialogue
+            m_Dialogue = asset.FindActionMap("Dialogue", throwIfNotFound: true);
+            m_Dialogue_Next = m_Dialogue.FindAction("Next", throwIfNotFound: true);
             // UI
             m_UI = asset.FindActionMap("UI", throwIfNotFound: true);
             m_UI_Navigate = m_UI.FindAction("Navigate", throwIfNotFound: true);
@@ -828,7 +859,8 @@ namespace LTH.Input
 
         ~@StandardInputActions()
         {
-            UnityEngine.Debug.Assert(!m_Character.enabled, "This will cause a leak and performance issues, StandardInputActions.Character.Disable() has not been called.");
+            UnityEngine.Debug.Assert(!m_Default.enabled, "This will cause a leak and performance issues, StandardInputActions.Default.Disable() has not been called.");
+            UnityEngine.Debug.Assert(!m_Dialogue.enabled, "This will cause a leak and performance issues, StandardInputActions.Dialogue.Disable() has not been called.");
             UnityEngine.Debug.Assert(!m_UI.enabled, "This will cause a leak and performance issues, StandardInputActions.UI.Disable() has not been called.");
         }
 
@@ -888,34 +920,34 @@ namespace LTH.Input
             return asset.FindBinding(bindingMask, out action);
         }
 
-        // Character
-        private readonly InputActionMap m_Character;
-        private List<ICharacterActions> m_CharacterActionsCallbackInterfaces = new List<ICharacterActions>();
-        private readonly InputAction m_Character_Walk;
-        private readonly InputAction m_Character_Action;
-        private readonly InputAction m_Character_MouseAction;
-        private readonly InputAction m_Character_UseTool;
-        private readonly InputAction m_Character_AimRotation;
-        private readonly InputAction m_Character_AimPosition;
-        public struct CharacterActions
+        // Default
+        private readonly InputActionMap m_Default;
+        private List<IDefaultActions> m_DefaultActionsCallbackInterfaces = new List<IDefaultActions>();
+        private readonly InputAction m_Default_Walk;
+        private readonly InputAction m_Default_Action;
+        private readonly InputAction m_Default_MouseAction;
+        private readonly InputAction m_Default_UseTool;
+        private readonly InputAction m_Default_AimRotation;
+        private readonly InputAction m_Default_AimPosition;
+        public struct DefaultActions
         {
             private @StandardInputActions m_Wrapper;
-            public CharacterActions(@StandardInputActions wrapper) { m_Wrapper = wrapper; }
-            public InputAction @Walk => m_Wrapper.m_Character_Walk;
-            public InputAction @Action => m_Wrapper.m_Character_Action;
-            public InputAction @MouseAction => m_Wrapper.m_Character_MouseAction;
-            public InputAction @UseTool => m_Wrapper.m_Character_UseTool;
-            public InputAction @AimRotation => m_Wrapper.m_Character_AimRotation;
-            public InputAction @AimPosition => m_Wrapper.m_Character_AimPosition;
-            public InputActionMap Get() { return m_Wrapper.m_Character; }
+            public DefaultActions(@StandardInputActions wrapper) { m_Wrapper = wrapper; }
+            public InputAction @Walk => m_Wrapper.m_Default_Walk;
+            public InputAction @Action => m_Wrapper.m_Default_Action;
+            public InputAction @MouseAction => m_Wrapper.m_Default_MouseAction;
+            public InputAction @UseTool => m_Wrapper.m_Default_UseTool;
+            public InputAction @AimRotation => m_Wrapper.m_Default_AimRotation;
+            public InputAction @AimPosition => m_Wrapper.m_Default_AimPosition;
+            public InputActionMap Get() { return m_Wrapper.m_Default; }
             public void Enable() { Get().Enable(); }
             public void Disable() { Get().Disable(); }
             public bool enabled => Get().enabled;
-            public static implicit operator InputActionMap(CharacterActions set) { return set.Get(); }
-            public void AddCallbacks(ICharacterActions instance)
+            public static implicit operator InputActionMap(DefaultActions set) { return set.Get(); }
+            public void AddCallbacks(IDefaultActions instance)
             {
-                if (instance == null || m_Wrapper.m_CharacterActionsCallbackInterfaces.Contains(instance)) return;
-                m_Wrapper.m_CharacterActionsCallbackInterfaces.Add(instance);
+                if (instance == null || m_Wrapper.m_DefaultActionsCallbackInterfaces.Contains(instance)) return;
+                m_Wrapper.m_DefaultActionsCallbackInterfaces.Add(instance);
                 @Walk.started += instance.OnWalk;
                 @Walk.performed += instance.OnWalk;
                 @Walk.canceled += instance.OnWalk;
@@ -936,7 +968,7 @@ namespace LTH.Input
                 @AimPosition.canceled += instance.OnAimPosition;
             }
 
-            private void UnregisterCallbacks(ICharacterActions instance)
+            private void UnregisterCallbacks(IDefaultActions instance)
             {
                 @Walk.started -= instance.OnWalk;
                 @Walk.performed -= instance.OnWalk;
@@ -958,21 +990,67 @@ namespace LTH.Input
                 @AimPosition.canceled -= instance.OnAimPosition;
             }
 
-            public void RemoveCallbacks(ICharacterActions instance)
+            public void RemoveCallbacks(IDefaultActions instance)
             {
-                if (m_Wrapper.m_CharacterActionsCallbackInterfaces.Remove(instance))
+                if (m_Wrapper.m_DefaultActionsCallbackInterfaces.Remove(instance))
                     UnregisterCallbacks(instance);
             }
 
-            public void SetCallbacks(ICharacterActions instance)
+            public void SetCallbacks(IDefaultActions instance)
             {
-                foreach (var item in m_Wrapper.m_CharacterActionsCallbackInterfaces)
+                foreach (var item in m_Wrapper.m_DefaultActionsCallbackInterfaces)
                     UnregisterCallbacks(item);
-                m_Wrapper.m_CharacterActionsCallbackInterfaces.Clear();
+                m_Wrapper.m_DefaultActionsCallbackInterfaces.Clear();
                 AddCallbacks(instance);
             }
         }
-        public CharacterActions @Character => new CharacterActions(this);
+        public DefaultActions @Default => new DefaultActions(this);
+
+        // Dialogue
+        private readonly InputActionMap m_Dialogue;
+        private List<IDialogueActions> m_DialogueActionsCallbackInterfaces = new List<IDialogueActions>();
+        private readonly InputAction m_Dialogue_Next;
+        public struct DialogueActions
+        {
+            private @StandardInputActions m_Wrapper;
+            public DialogueActions(@StandardInputActions wrapper) { m_Wrapper = wrapper; }
+            public InputAction @Next => m_Wrapper.m_Dialogue_Next;
+            public InputActionMap Get() { return m_Wrapper.m_Dialogue; }
+            public void Enable() { Get().Enable(); }
+            public void Disable() { Get().Disable(); }
+            public bool enabled => Get().enabled;
+            public static implicit operator InputActionMap(DialogueActions set) { return set.Get(); }
+            public void AddCallbacks(IDialogueActions instance)
+            {
+                if (instance == null || m_Wrapper.m_DialogueActionsCallbackInterfaces.Contains(instance)) return;
+                m_Wrapper.m_DialogueActionsCallbackInterfaces.Add(instance);
+                @Next.started += instance.OnNext;
+                @Next.performed += instance.OnNext;
+                @Next.canceled += instance.OnNext;
+            }
+
+            private void UnregisterCallbacks(IDialogueActions instance)
+            {
+                @Next.started -= instance.OnNext;
+                @Next.performed -= instance.OnNext;
+                @Next.canceled -= instance.OnNext;
+            }
+
+            public void RemoveCallbacks(IDialogueActions instance)
+            {
+                if (m_Wrapper.m_DialogueActionsCallbackInterfaces.Remove(instance))
+                    UnregisterCallbacks(instance);
+            }
+
+            public void SetCallbacks(IDialogueActions instance)
+            {
+                foreach (var item in m_Wrapper.m_DialogueActionsCallbackInterfaces)
+                    UnregisterCallbacks(item);
+                m_Wrapper.m_DialogueActionsCallbackInterfaces.Clear();
+                AddCallbacks(instance);
+            }
+        }
+        public DialogueActions @Dialogue => new DialogueActions(this);
 
         // UI
         private readonly InputActionMap m_UI;
@@ -1091,7 +1169,7 @@ namespace LTH.Input
             }
         }
         public UIActions @UI => new UIActions(this);
-        public interface ICharacterActions
+        public interface IDefaultActions
         {
             void OnWalk(InputAction.CallbackContext context);
             void OnAction(InputAction.CallbackContext context);
@@ -1099,6 +1177,10 @@ namespace LTH.Input
             void OnUseTool(InputAction.CallbackContext context);
             void OnAimRotation(InputAction.CallbackContext context);
             void OnAimPosition(InputAction.CallbackContext context);
+        }
+        public interface IDialogueActions
+        {
+            void OnNext(InputAction.CallbackContext context);
         }
         public interface IUIActions
         {

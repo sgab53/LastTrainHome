@@ -2,7 +2,7 @@
     "name": "StandardInputActions",
     "maps": [
         {
-            "name": "Character",
+            "name": "Default",
             "id": "1f588f05-9a18-40e2-91e8-74c352f12a39",
             "actions": [
                 {
@@ -36,7 +36,7 @@
                     "name": "UseTool",
                     "type": "Button",
                     "id": "7e82a8d4-f155-41e0-a712-fae27d670b6d",
-                    "expectedControlType": "Button",
+                    "expectedControlType": "",
                     "processors": "",
                     "interactions": "Press",
                     "initialStateCheck": false
@@ -262,6 +262,34 @@
             ]
         },
         {
+            "name": "Dialogue",
+            "id": "d84d2e1e-ed2c-4e1b-ac1d-1b5603f0b186",
+            "actions": [
+                {
+                    "name": "Next",
+                    "type": "Button",
+                    "id": "44b54628-c7a4-4348-b246-685caca8a552",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                }
+            ],
+            "bindings": [
+                {
+                    "name": "",
+                    "id": "28998094-088b-4795-b4c8-224b254bf274",
+                    "path": "*/{Submit}",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Keyboard&Mouse;Gamepad;Touch;Joystick;XR",
+                    "action": "Next",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                }
+            ]
+        },
+        {
             "name": "UI",
             "id": "8bf86646-883c-49c4-a568-caba8ca64db1",
             "actions": [
@@ -278,7 +306,7 @@
                     "name": "Submit",
                     "type": "Button",
                     "id": "6478c196-7065-41c9-a870-8ef74bdf1725",
-                    "expectedControlType": "Button",
+                    "expectedControlType": "",
                     "processors": "",
                     "interactions": "",
                     "initialStateCheck": false

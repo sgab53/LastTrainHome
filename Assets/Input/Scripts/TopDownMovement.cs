@@ -5,8 +5,9 @@ namespace LTH.Input
 {
     public class TopDownMovement : MonoBehaviour
     {
-        [Header("Component References")]
         [SerializeField] private InputActionReference _move;
+
+        [Header("Component References")]
         [SerializeField] private CharacterController _controller;
         [SerializeField] private Transform _cameraTransform;
 
@@ -14,9 +15,15 @@ namespace LTH.Input
         [SerializeField] private float _moveSpeed = 5f;
         [SerializeField] private LayerMask _groundLayers;
 
-        private Vector2 _movement = Vector2.zero;
-        private Vector3 _direction = Vector3.zero;
+        private Vector2 _movement;
+        private Vector3 _direction;
         private readonly RaycastHit[] _hits = new RaycastHit[8];
+
+        private void InitializeMonoBehaviour()
+        {
+            _controller ??= (CharacterController)GetComponent(typeof(CharacterController));
+            //_cameraTransform = CameraService; // Get main camera from a Camera Service
+        }
 
         private void OnEnable()
         {

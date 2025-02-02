@@ -1,11 +1,10 @@
 {
-    "name": "LTH.Input",
+    "name": "LTH.CameraSystem",
     "rootNamespace": "",
     "references": [
-        "GUID:e70901fd060b3cd46920f62c257cabee",
+        "GUID:4307f53044263cf4b835bd812fc161a4",
         "GUID:361206fd282dd054e87d29df4f363c62",
-        "GUID:73295f9e984d9964497f318a6b4f6f62",
-        "GUID:75469ad4d38634e559750d17036d5f7c"
+        "GUID:73295f9e984d9964497f318a6b4f6f62"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],

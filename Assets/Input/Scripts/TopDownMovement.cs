@@ -1,6 +1,8 @@
 using UnityEngine;
 using UnityEngine.InputSystem;
 
+using CameraDirector = LTH.CameraSystem.CameraDirectorService;
+
 namespace LTH.Input
 {
     public class TopDownMovement : MonoBehaviour
@@ -22,7 +24,7 @@ namespace LTH.Input
         private void InitializeMonoBehaviour()
         {
             _controller ??= (CharacterController)GetComponent(typeof(CharacterController));
-            //_cameraTransform = CameraService; // Get main camera from a Camera Service
+            _cameraTransform ??= CameraDirector.Camera.transform;
         }
 
         private void OnEnable()

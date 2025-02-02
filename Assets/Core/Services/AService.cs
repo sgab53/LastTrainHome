@@ -6,7 +6,7 @@ namespace LTH.Core.Services
     {
         protected virtual void Awake()
         {
-            Register();
+            Register((T)this);
             ServiceLocator.Instance.Destroyed += DestroySelf;
         }
 
@@ -21,12 +21,12 @@ namespace LTH.Core.Services
             DestroyImmediate(gameObject);
         }
 
-        protected virtual void Register()
+        private static void Register(T instance)
         {
-            ServiceLocator.Instance.RegisterService((T)this);
+            ServiceLocator.Instance.RegisterService(instance);
         }
 
-        protected virtual void Unregister()
+        private static void Unregister()
         {
             ServiceLocator.Instance.UnregisterService<T>();
         }

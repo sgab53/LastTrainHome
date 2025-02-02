@@ -22,9 +22,9 @@ namespace LTH.Player.Components
         private float _currentCharge, _remainingCharge;
         private int _batteries;
 
-        private readonly int DischargedTrigger = Animator.StringToHash("Discharged");
-        private readonly int TurnOnTrigger = Animator.StringToHash("TurnOn");
-        private readonly int TurnOffTrigger = Animator.StringToHash("TurnOff");
+        private static readonly int DischargedTrigger = Animator.StringToHash("Discharged");
+        private static readonly int TurnOnTrigger = Animator.StringToHash("TurnOn");
+        private static readonly int TurnOffTrigger = Animator.StringToHash("TurnOff");
 
         private float Charge
         {

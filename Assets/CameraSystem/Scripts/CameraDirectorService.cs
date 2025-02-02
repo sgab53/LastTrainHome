@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace LTH.CameraSystem
 {
-    public class CameraDirectorService : MonoBehaviour, IService
+    public sealed class CameraDirectorService : AService<CameraDirectorService>
     {
         private static CinemachineBrain _brain;
 
@@ -13,17 +13,6 @@ namespace LTH.CameraSystem
         private void Reset()
         {
             _brain ??= (CinemachineBrain)Camera.main!.GetComponent(typeof(CinemachineBrain));
-        }
-
-        private void Awake()
-        {
-            ServiceLocator.Instance.RegisterService(this);
-            _brain = (CinemachineBrain)Camera.main!.GetComponent(typeof(CinemachineBrain));
-        }
-
-        private void OnDestroy()
-        {
-            ServiceLocator.Instance.UnregisterService<CameraDirectorService>();
         }
     }
 }

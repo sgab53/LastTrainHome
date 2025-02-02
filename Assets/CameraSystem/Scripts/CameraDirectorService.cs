@@ -8,11 +8,17 @@ namespace LTH.CameraSystem
     {
         private static CinemachineBrain _brain;
 
-        public static Camera Camera => _brain.OutputCamera;
-
         private void Reset()
         {
-            _brain ??= (CinemachineBrain)Camera.main!.GetComponent(typeof(CinemachineBrain));
+            if (!_brain && Camera.main)
+                _brain = (CinemachineBrain)Camera.main!.GetComponent(typeof(CinemachineBrain));
         }
+
+        private void OnValidate()
+        {
+            Reset();
+        }
+
+        // SEARCHME: use this object to setup cameras on instantiation
     }
 }

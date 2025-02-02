@@ -2,10 +2,36 @@ using System.Reflection;
 using UnityEditor;
 using UnityEngine;
 
-namespace Editor
+namespace LTH.Editor
 {
     public static class InitializeMonoBehaviourContextMenu
     {
+        private const string TargetMethodName = "InitializeMonoBehaviour";
+
+        private static void Initialize(GameObject gameObject)
+        {
+            var behaviours = gameObject.GetComponents<MonoBehaviour>();
+            var len = behaviours.Length;
+
+            for (var i = 0; i < len; ++i)
+            {
+                Initialize(behaviours[i]);
+            }
+        }
+
+        private static void Initialize(MonoBehaviour target)
+        {
+            var method = target.GetType().GetMethod(
+                TargetMethodName,
+                BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic);
+
+            if (method == null)
+                return;
+
+            method.Invoke(target, null);
+            EditorUtility.SetDirty(target);
+        }
+
         [MenuItem("CONTEXT/MonoBehaviour/Initialize MonoBehaviour", false, 0)]
         private static void Initialize(MenuCommand command)
         {
@@ -14,13 +40,32 @@ namespace Editor
             if (!target)
                 return;
 
-            var method = target.GetType().GetMethod(
-                "InitializeMonoBehaviour",
-                BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic);
-
-            if (method != null)
-                method.Invoke(target, null);
+            Initialize(target);
         }
 
+        [MenuItem("LTH Tools/Initialize All MonoBehaviours")]
+        private static void InitializeAll()
+        {
+            var objects = Object.FindObjectsOfType<MonoBehaviour>();
+            var len = objects.Length;
+
+            for (var i = 0; i < len; ++i)
+            {
+                Initialize(objects[i]);
+            }
+        }
+
+        [MenuItem("GameObject/Initialize Selected", false, 0)]
+        private static void InitializeSelected()
+        {
+            var objects = Selection.objects;
+            var len = objects.Length;
+
+            for (var i = 0; i < len; ++i)
+            {
+                if (objects[i] is GameObject obj)
+                    Initialize(obj);
+            }
+        }
     }
 }

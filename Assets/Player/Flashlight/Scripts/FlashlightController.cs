@@ -17,8 +17,6 @@ namespace LTH.Player.Components
         [Header("Settings")]
         [SerializeField] private LayerMask _targetLayers;
 
-        private readonly RaycastHit[] _hits = new RaycastHit[8];
-
         private Vector3 _direction;
 
         private void OnValidate()
@@ -29,8 +27,8 @@ namespace LTH.Player.Components
 
         private void OnEnable()
         {
-            _aimRotation.action.performed += GetAimFromRotation;
-            _aimPosition.action.performed += GetAimFromPosition;
+            _aimRotation.action.performed += OnAimRotation;
+            _aimPosition.action.performed += OnAimPosition;
         }
 
         private void Awake()
@@ -41,8 +39,8 @@ namespace LTH.Player.Components
 
         private void OnDisable()
         {
-            _aimRotation.action.performed -= GetAimFromRotation;
-            _aimPosition.action.performed -= GetAimFromPosition;
+            _aimRotation.action.performed -= OnAimRotation;
+            _aimPosition.action.performed -= OnAimPosition;
         }
 
         private void OnDestroy()
@@ -50,23 +48,31 @@ namespace LTH.Player.Components
             _flashlightToggle.action.performed -= ToggleFlashlight;
         }
 
-        private void GetAimFromRotation(InputAction.CallbackContext ctx)
+        private void OnAimRotation(InputAction.CallbackContext ctx)
         {
             var dir = ctx.ReadValue<Vector2>();
+
+            if (Vector2.SqrMagnitude(dir) < Mathf.Epsilon)
+                return;
+
             _direction = new Vector3(dir.x, 0, dir.y);
             _origin.LookAt(_origin.position + _direction, _origin.up);
         }
 
-        private void GetAimFromPosition(InputAction.CallbackContext ctx)
+        private void OnAimPosition(InputAction.CallbackContext ctx)
         {
             var screenPos = ctx.ReadValue<Vector2>();
-            var ray = _camera.ScreenPointToRay(screenPos, Camera.MonoOrStereoscopicEye.Mono);
+            Vector2 target = _camera.WorldToScreenPoint(_origin.position);
 
-            if (Physics.RaycastNonAlloc(ray, _hits, 100f, _targetLayers, QueryTriggerInteraction.Ignore) <= 0)
+            var direction = target - screenPos;
+            var distance = Vector2.SqrMagnitude(direction);
+
+            if (distance < Mathf.Epsilon)
                 return;
 
-            _direction = Vector3.ProjectOnPlane(_hits[0].point - _origin.position, _origin.up);
-            _origin.LookAt(_origin.position + _direction, _origin.up);
+            var angle = Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg + 90f;
+
+            _origin.rotation = Quaternion.AngleAxis(-angle, _origin.up);
         }
 
         private void ToggleFlashlight(InputAction.CallbackContext _)

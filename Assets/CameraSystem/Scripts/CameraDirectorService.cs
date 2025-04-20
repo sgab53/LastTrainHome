@@ -1,5 +1,5 @@
-using Cinemachine;
 using LTH.Core.Services;
+using Unity.Cinemachine;
 using UnityEngine;
 
 namespace LTH.CameraSystem

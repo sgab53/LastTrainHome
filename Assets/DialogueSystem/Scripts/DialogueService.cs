@@ -1,9 +1,11 @@
 using LTH.Core.Services;
+using UnityEngine;
 using Action = System.Action;
 
 namespace LTH.DialogueSystem
 {
-    public sealed partial class DialogueService : AService<DialogueService>
+    [CreateAssetMenu(fileName = "DialogueService", menuName = "Services/Dialogue Service")]
+    public sealed partial class DialogueService : ServiceAsset
     {
         private static readonly DialogueSequencer Sequencer = new();
 
@@ -41,5 +43,9 @@ namespace LTH.DialogueSystem
         {
             Sequencer.ForceDialogueEnd();
         }
+
+        protected override void OnInit() {}
+
+        protected override void OnShutdown() {}
     }
 }

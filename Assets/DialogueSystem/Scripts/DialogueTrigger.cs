@@ -20,10 +20,9 @@ namespace LTH.DialogueSystem
             DialogueService.RegisterTriggerCallback(OnDialogueEnded);
         }
 
-        protected override void OnDestroy()
+        private void OnDestroy()
         {
             DialogueService.UnregisterTriggerCallback(OnDialogueEnded);
-            base.OnDestroy();
         }
 
         private void OnDialogueEnded()

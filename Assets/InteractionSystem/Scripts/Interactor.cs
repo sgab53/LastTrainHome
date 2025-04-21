@@ -1,18 +1,18 @@
+using Cysharp.Threading.Tasks;
 using LTH.Core.Services;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
 namespace LTH.InteractionSystem
 {
-    public class Interactor : MonoBehaviour
+    public sealed class Interactor : MonoBehaviour
     {
         [SerializeField] private InputActionReference _interact;
+        private InteractionService _interactionService;
 
         [Header("Parameters")]
         [SerializeField] private float _interactionRadius = 3f;
         [SerializeField] private LayerMask interactableLayers;
-
-        private InteractionService _interactionService;
 
         private readonly Collider[] _hits = new Collider[8];
 
@@ -26,9 +26,14 @@ namespace LTH.InteractionSystem
             _interact.action.performed -= OnInteractActionPerformed;
         }
 
-        private void Start()
+        private void Awake()
         {
-            _interactionService = ServiceLocator.Instance.GetService<InteractionService>();
+            InitInteractor().Forget();
+        }
+
+        private async UniTaskVoid InitInteractor()
+        {
+            _interactionService = await Service.Get<InteractionService>();
         }
 
         private void OnInteractActionPerformed(InputAction.CallbackContext _)
@@ -38,6 +43,9 @@ namespace LTH.InteractionSystem
 
         private void Update()
         {
+            if (!_interactionService)
+                return;
+
             var count = Physics.OverlapSphereNonAlloc(transform.position, _interactionRadius, _hits,
                 interactableLayers);
 
@@ -47,7 +55,7 @@ namespace LTH.InteractionSystem
                 return;
             }
 
-            var nearest = FindNearest(count);
+            var nearest = FindNearest();
 
             if (!nearest)
             {
@@ -56,26 +64,27 @@ namespace LTH.InteractionSystem
             }
 
             _interactionService.SwapTargetIfValid(nearest.gameObject);
-        }
+            return;
 
-        private Collider FindNearest(int count)
-        {
-            Collider nearest = null;
-            var closestDist = Mathf.Infinity;
-
-            for (var i = 0; i < count; ++i)
+            Collider FindNearest()
             {
-                var c = _hits[i];
-                var dist = (c.transform.position - transform.position).sqrMagnitude;
+                nearest = null;
+                var closestDist = Mathf.Infinity;
 
-                if (dist >= closestDist)
-                    continue;
+                for (var i = 0; i < count; ++i)
+                {
+                    var c = _hits[i];
+                    var dist = (c.transform.position - transform.position).sqrMagnitude;
 
-                closestDist = dist;
-                nearest = c;
+                    if (dist >= closestDist)
+                        continue;
+
+                    closestDist = dist;
+                    nearest = c;
+                }
+
+                return nearest;
             }
-
-            return nearest;
         }
     }
 }

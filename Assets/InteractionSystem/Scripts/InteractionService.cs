@@ -4,22 +4,17 @@ using UnityEngine;
 
 namespace LTH.InteractionSystem
 {
-    public sealed class InteractionService : AService<InteractionService>
+    [CreateAssetMenu(fileName = "InteractionService", menuName = "Services/Interaction Service")]
+    public sealed class InteractionService : ServiceAsset
     {
         private readonly Dictionary<GameObject, Interactable> _interactables = new();
-
         private Interactable _target, _forcedTarget;
 
-        protected override void OnDestroy()
+        public void AddInteractable(GameObject key, Interactable interactable)
         {
-            _interactables.Clear();
-            base.OnDestroy();
+            _interactables.Add(key, interactable);
         }
 
-        public void AddInteractable(GameObject key, Interactable value)
-        {
-            _interactables.Add(key, value);
-        }
         public void RemoveInteractable(GameObject key)
         {
             if (_target?.gameObject == key)
@@ -31,30 +26,18 @@ namespace LTH.InteractionSystem
             _interactables.Remove(key);
         }
 
-        private void SwapTarget(Interactable interactable)
-        {
-            if (_forcedTarget)
-            {
-                interactable = _forcedTarget;
-            }
-
-            if (_target == interactable)
-                return;
-
-            _target?.Deselect();
-            interactable.Select();
-            _target = interactable;
-        }
-
         public void SwapTargetIfValid(GameObject key)
         {
-            if (!_target || _target.gameObject != key.gameObject)
+            if (!_target || _target.gameObject != key)
                 SwapTarget(_interactables.GetValueOrDefault(key));
         }
 
         public void UnsetTarget()
         {
-            _target?.Deselect();
+            if (!_target)
+                return;
+
+            _target.Deselect();
             _target = null;
         }
 
@@ -80,6 +63,32 @@ namespace LTH.InteractionSystem
         public void UnsetForcedTarget()
         {
             _forcedTarget = null;
+        }
+
+        private void SwapTarget(Interactable interactable)
+        {
+            if (_forcedTarget)
+            {
+                interactable = _forcedTarget;
+            }
+
+            if (_target == interactable)
+                return;
+
+            _target?.Deselect();
+            interactable.Select();
+            _target = interactable;
+        }
+
+        protected override void OnInit()
+        {
+            _interactables.Clear();
+            _target = _forcedTarget = null;
+        }
+
+        protected override void OnShutdown()
+        {
+            _interactables.Clear();
         }
     }
 }

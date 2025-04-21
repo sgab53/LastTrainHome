@@ -1,3 +1,5 @@
+using Cysharp.Threading.Tasks;
+using LTH.Core.Services;
 using LTH.UI;
 using UnityEngine;
 using UnityEngine.Localization.Tables;
@@ -41,6 +43,14 @@ namespace LTH.DialogueSystem
         private void Start()
         {
             _dialoguePanel = _document.rootVisualElement.Q<DialoguePanel>();
+            BindUI().Forget();
+        }
+
+        private async UniTaskVoid BindUI()
+        {
+            if (!Service.IsLoaded<DialogueService>())
+                await Service.Get<DialogueService>();
+
             DialogueService.BindUI(this);
         }
     }

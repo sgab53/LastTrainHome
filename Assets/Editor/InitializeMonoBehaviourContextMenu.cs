@@ -46,7 +46,8 @@ namespace LTH.Editor
         [MenuItem("LTH Tools/Initialize All MonoBehaviours")]
         private static void InitializeAll()
         {
-            var objects = Object.FindObjectsOfType<MonoBehaviour>();
+            var objects =
+                Object.FindObjectsByType<MonoBehaviour>(FindObjectsInactive.Include, FindObjectsSortMode.None);
             var len = objects.Length;
 
             for (var i = 0; i < len; ++i)

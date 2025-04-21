@@ -1,3 +1,4 @@
+using Cysharp.Threading.Tasks;
 using LTH.Core.Services;
 using UnityEngine;
 using UnityEngine.Events;
@@ -9,11 +10,12 @@ namespace LTH.InteractionSystem
     public class Interactable : MonoBehaviour,
         IPointerEnterHandler, IPointerExitHandler, IPointerDownHandler
     {
+        private InteractionService _interactionService;
+
+        [Header("Interaction Events")]
         [SerializeField] private UnityEvent _onInteracted;
         [SerializeField] private UnityEvent _onSelected;
         [SerializeField] private UnityEvent _onDeselected;
-
-        private InteractionService _interactionService;
 
         public UnityEvent OnInteractedEvent => _onInteracted;
         public UnityEvent OnSelectedEvent => _onSelected;
@@ -21,25 +23,20 @@ namespace LTH.InteractionSystem
 
         protected virtual void OnEnable()
         {
-            if (!_interactionService)
-                _interactionService = ServiceLocator.Instance.GetService<InteractionService>();
-
             gameObject.layer = LayerMask.NameToLayer("Interactable");
+            AddToInteractionService().Forget();
+        }
+
+        private async UniTaskVoid AddToInteractionService()
+        {
+            _interactionService = await Service.Get<InteractionService>();
             _interactionService.AddInteractable(gameObject, this);
         }
 
         protected virtual void OnDisable()
         {
-            if (!_interactionService)
-                return;
-
             _interactionService.RemoveInteractable(gameObject);
             gameObject.layer = LayerMask.NameToLayer("Default");
-        }
-
-        protected virtual void OnDestroy()
-        {
-            _interactionService = null;
         }
 
         public virtual void Interact()
@@ -71,18 +68,8 @@ namespace LTH.InteractionSystem
 
         public void OnPointerDown(PointerEventData eventData)
         {
-            switch (eventData.button)
-            {
-                case PointerEventData.InputButton.Left:
-                    _interactionService.InteractWithSelectedTarget();
-                    break;
-                case PointerEventData.InputButton.Right: // unused
-                    break;
-                case PointerEventData.InputButton.Middle: // unused
-                    break;
-                default:
-                    break;
-            }
+            if (eventData.button == PointerEventData.InputButton.Left)
+                _interactionService.InteractWithSelectedTarget();
         }
     }
 }

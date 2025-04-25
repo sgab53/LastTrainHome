@@ -30,7 +30,7 @@ namespace LTH.DialogueSystem
             base.Awake();
 
             _entry =
-                Addressables.LoadAssetAsync<DialogueEntry>(_dialogueReference.AssetGUID).WaitForCompletion();
+                Addressables.LoadAssetAsync<DialogueEntry>(_dialogueReference).WaitForCompletion();
 
             if (!_dialogueService)
                 _dialogueService = Service.Load<DialogueService>();

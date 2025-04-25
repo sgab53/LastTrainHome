@@ -75,7 +75,7 @@ namespace LTH.UI
             CancelTyping();
             _typingSource = new CancellationTokenSource();
 
-            _dialogueLabel.text = null;
+            _dialogueLabel.text = "";
             _currentText = text;
 
             TypeText().Forget();

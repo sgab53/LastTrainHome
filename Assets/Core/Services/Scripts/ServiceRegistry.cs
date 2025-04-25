@@ -60,7 +60,7 @@ namespace LTH.Core.Services
         public void UnloadService<T>()
         {
             var staticService = _loadedServices.Find(s => s is T);
-            if (staticService != null)
+            if (staticService)
             {
                 staticService.Shutdown();
                 _loadedServices.Remove(staticService);

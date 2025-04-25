@@ -1,47 +1,64 @@
+using System;
 using LTH.Core.Services;
 using UnityEngine;
-using Action = System.Action;
+
+using TableRef = UnityEngine.Localization.Tables.TableReference;
+using EntryRef = UnityEngine.Localization.Tables.TableEntryReference;
 
 namespace LTH.DialogueSystem
 {
     [CreateAssetMenu(fileName = "DialogueService", menuName = "Services/Dialogue Service")]
     public sealed partial class DialogueService : ServiceAsset
     {
-        private static readonly DialogueSequencer Sequencer = new();
+        private readonly DialogueSequencer _sequencer = new();
 
-        public static void BindUI(DialogueUI gui)
+        public event Action DialogueStarted
         {
-            Sequencer.BeforeDialogueStarted += gui.ShowBeforeDialoguePrompt;
-            //_sequencer.DialogueStarted += gui.;
-            Sequencer.DialogueEnded += gui.HideDialoguePrompt;
-            Sequencer.NextLineChanged += gui.UpdateDialogueEntry;
-
-            gui.RegisterNextLineCallback(NextLine);
+            add => _sequencer.DialogueStarted += value;
+            remove => _sequencer.DialogueStarted -= value;
         }
 
-        public static void RegisterTriggerCallback(Action callback)
+        public event Action DialogueReady
         {
-            Sequencer.DialogueEnded += callback;
+            add => _sequencer.DialogueReady += value;
+            remove => _sequencer.DialogueReady -= value;
         }
 
-        public static void UnregisterTriggerCallback(Action callback)
+        public event Action DialogueEnded
         {
-            Sequencer.DialogueEnded -= callback;
+            add => _sequencer.DialogueEnded += value;
+            remove => _sequencer.DialogueEnded -= value;
         }
 
-        public static void StartDialogue(DialogueEntry entry)
+        public event Action<TableRef, EntryRef> NextLineChanged
         {
-            Sequencer.LoadDialogue(entry);
+            add => _sequencer.NextLineChanged += value;
+            remove => _sequencer.NextLineChanged -= value;
         }
 
-        private static void NextLine()
+        public void RegisterTriggerCallback(Action callback)
         {
-            Sequencer.Next();
+            _sequencer.DialogueEnded += callback;
         }
 
-        public static void Break()
+        public void UnregisterTriggerCallback(Action callback)
         {
-            Sequencer.ForceDialogueEnd();
+            _sequencer.DialogueEnded -= callback;
+        }
+
+        public void StartDialogue(DialogueEntry entry)
+        {
+            _sequencer.LoadDialogue(entry);
+        }
+
+        public void NextLine()
+        {
+            _sequencer.Next();
+        }
+
+        public void Break()
+        {
+            _sequencer.ForceDialogueEnd();
         }
 
         protected override void OnInit() {}

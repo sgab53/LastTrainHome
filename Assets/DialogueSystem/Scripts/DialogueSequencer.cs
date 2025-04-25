@@ -1,6 +1,8 @@
 using System;
 using UnityEngine;
-using UnityEngine.Localization.Tables;
+
+using TableRef = UnityEngine.Localization.Tables.TableReference;
+using EntryRef = UnityEngine.Localization.Tables.TableEntryReference;
 
 namespace LTH.DialogueSystem
 {
@@ -8,10 +10,10 @@ namespace LTH.DialogueSystem
     {
         private sealed class DialogueSequencer
         {
-            public event Action BeforeDialogueStarted;
             public event Action DialogueStarted;
+            public event Action DialogueReady;
             public event Action DialogueEnded;
-            public event Action<TableReference, TableEntryReference> NextLineChanged;
+            public event Action<TableRef, EntryRef> NextLineChanged;
 
             private DialogueEntry _currentDialogueEntry;
             private int _length;
@@ -24,8 +26,27 @@ namespace LTH.DialogueSystem
                 if (_state == DialogueState.Busy)
                     return;
 
+                #if UNITY_EDITOR
+                if (dialogue.Length == 0)
+                {
+                    Debug.LogError("Dialogue Entry is empty.");
+                    _state = DialogueState.Unset;
+                    return;
+                }
+                #endif
+
                 _state = DialogueState.Busy;
-                PrepareDialogue(dialogue);
+
+                DialogueStarted?.Invoke();
+
+                _currentDialogueEntry = dialogue;
+                _length = dialogue.Length;
+                _currentLine = 0;
+
+                UpdateLine();
+                _state = DialogueState.Ready;
+
+                DialogueReady?.Invoke();
             }
 
             public bool Next()
@@ -55,24 +76,8 @@ namespace LTH.DialogueSystem
 
             private void UpdateLine()
             {
-                var current = _currentDialogueEntry[_currentLine];
-                NextLineChanged?.Invoke(current.TableReference, current.TableEntryReference);
-            }
-
-            private void PrepareDialogue(DialogueEntry dialogue)
-            {
-                BeforeDialogueStarted?.Invoke();
-
-                if (dialogue.Length == 0)
-                    Debug.LogError("Dialogue Entry is empty.");
-
-                _currentDialogueEntry = dialogue;
-                _length = dialogue.Length;
-                _currentLine = 0;
-
-                DialogueStarted?.Invoke();
-                UpdateLine();
-                _state = DialogueState.Ready;
+                var line = _currentDialogueEntry[_currentLine];
+                NextLineChanged?.Invoke(line.TableReference, line.TableEntryReference);
             }
 
             private enum DialogueState : byte

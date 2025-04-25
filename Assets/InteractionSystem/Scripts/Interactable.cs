@@ -1,4 +1,4 @@
-using Cysharp.Threading.Tasks;
+using System;
 using LTH.Core.Services;
 using UnityEngine;
 using UnityEngine.Events;
@@ -10,27 +10,27 @@ namespace LTH.InteractionSystem
     public class Interactable : MonoBehaviour,
         IPointerEnterHandler, IPointerExitHandler, IPointerDownHandler
     {
-        private InteractionService _interactionService;
-
-        [Header("Interaction Events")]
         [SerializeField] private UnityEvent _onInteracted;
         [SerializeField] private UnityEvent _onSelected;
         [SerializeField] private UnityEvent _onDeselected;
+
+        [Header("Optional")]
+        [SerializeField] private InteractionService _interactionService;
 
         public UnityEvent OnInteractedEvent => _onInteracted;
         public UnityEvent OnSelectedEvent => _onSelected;
         public UnityEvent OnDeselectedEvent => _onDeselected;
 
-        protected virtual void OnEnable()
+        protected virtual void Awake()
         {
-            gameObject.layer = LayerMask.NameToLayer("Interactable");
-            AddToInteractionService().Forget();
+            if (!_interactionService)
+                _interactionService = Service.Load<InteractionService>();
         }
 
-        private async UniTaskVoid AddToInteractionService()
+        protected virtual void OnEnable()
         {
-            _interactionService = await Service.Get<InteractionService>();
             _interactionService.AddInteractable(gameObject, this);
+            gameObject.layer = LayerMask.NameToLayer("Interactable");
         }
 
         protected virtual void OnDisable()
@@ -44,12 +44,12 @@ namespace LTH.InteractionSystem
             _onInteracted?.Invoke();
         }
 
-        public virtual void Select()
+        public void Select()
         {
             _onSelected?.Invoke();
         }
 
-        public virtual void Deselect()
+        public void Deselect()
         {
             _onDeselected?.Invoke();
         }

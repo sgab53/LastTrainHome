@@ -8,12 +8,42 @@ namespace LTH.Core.Services
 {
     public sealed class ServiceRegistry : MonoBehaviour
     {
-        [SerializeField] private AssetReference[] _startupAssets;
+        [SerializeField] private AssetReferenceT<ServiceAsset>[] _startupAssets;
 
         private readonly List<ServiceAsset> _loadedServices = new();
         private readonly Dictionary<Type, ServiceAsset> _runtimeServices = new();
 
         public async UniTask<T> LoadServiceAsync<T>() where T : ServiceAsset
+        {
+            var serviceAsset = GetService<T>();
+            if (serviceAsset)
+                return serviceAsset;
+
+            var handle = Addressables.LoadAssetAsync<T>("Service");
+            await handle.Task;
+
+            serviceAsset = handle.Result;
+            handle.Release();
+            serviceAsset.Initialize();
+            _runtimeServices[typeof(T)] = serviceAsset;
+
+            return serviceAsset;
+        }
+
+        public T LoadService<T>() where T : ServiceAsset
+        {
+            var serviceAsset = GetService<T>();
+            if (serviceAsset)
+                return serviceAsset;
+
+            serviceAsset = Addressables.LoadAssetAsync<T>("Service").WaitForCompletion();
+            serviceAsset.Initialize();
+            _runtimeServices[typeof(T)] = serviceAsset;
+
+            return serviceAsset;
+        }
+
+        public T GetService<T>() where T : ServiceAsset
         {
             foreach (var service in _loadedServices)
             {
@@ -21,19 +51,10 @@ namespace LTH.Core.Services
                     return existing;
             }
 
-            var type = typeof(T);
-            if (_runtimeServices.TryGetValue(type, out var cached))
+            if (_runtimeServices.TryGetValue(typeof(T), out var cached))
                 return (T)cached;
 
-            var handle = Addressables.LoadAssetAsync<T>("Service");
-            await handle.Task;
-
-            var serviceAsset = handle.Result;
-            handle.Release();
-            serviceAsset.Initialize();
-            _runtimeServices[type] = serviceAsset;
-
-            return serviceAsset;
+            return null;
         }
 
         public void UnloadService<T>()
@@ -88,13 +109,11 @@ namespace LTH.Core.Services
             for (var i = _loadedServices.Count - 1; i >= 0; --i)
             {
                 _loadedServices[i].Shutdown();
-                //Addressables.Release(_loadedServices[i]);
             }
 
             foreach (var service in _runtimeServices.Values)
             {
                 service.Shutdown();
-                //Addressables.Release(service);
             }
 
             _runtimeServices.Clear();
@@ -105,9 +124,11 @@ namespace LTH.Core.Services
     {
         private static ServiceRegistry _registry;
 
-        public static bool IsLoaded<T>() => _registry.IsServiceLoaded<T>();
         public static void Register(ServiceRegistry registry) => _registry = registry;
-        public static async UniTask<T> Get<T>() where T : ServiceAsset =>
+        public static bool IsLoaded<T>() => _registry.IsServiceLoaded<T>();
+        public static T Get<T>() where T : ServiceAsset => _registry.GetService<T>();
+        public static T Load<T>() where T : ServiceAsset => _registry.LoadService<T>();
+        public static async UniTask<T> LoadAsync<T>() where T : ServiceAsset =>
             await _registry.LoadServiceAsync<T>();
     }
 }

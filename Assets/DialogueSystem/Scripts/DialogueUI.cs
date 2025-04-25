@@ -1,57 +1,62 @@
-using Cysharp.Threading.Tasks;
 using LTH.Core.Services;
 using LTH.UI;
 using UnityEngine;
 using UnityEngine.Localization.Tables;
 using UnityEngine.UIElements;
-using Action = System.Action;
 
 namespace LTH.DialogueSystem
 {
     public class DialogueUI : MonoBehaviour
     {
         [SerializeField] private UIDocument _document;
+        [SerializeField] private DialogueService _dialogueService;
 
         private DialoguePanel _dialoguePanel;
 
-        public void RegisterNextLineCallback(Action onNextLine)
-        {
-            _dialoguePanel.RegisterCallback<PointerDownEvent>(OnPointerDown);
-            return;
-
-            void OnPointerDown(PointerDownEvent _)
-            {
-                onNextLine!();
-            }
-        }
-
-        public void ShowBeforeDialoguePrompt()
+        private void ShowDialoguePrompt()
         {
             _dialoguePanel.Show();
         }
 
-        public void HideDialoguePrompt()
+        private void HideDialoguePrompt()
         {
             _dialoguePanel.Hide();
         }
 
-        public void UpdateDialogueEntry(TableReference table, TableEntryReference entry)
+        private void UpdateDialogueEntry(TableReference table, TableEntryReference entry)
         {
             _dialoguePanel.UpdateDialogue(table, entry);
         }
 
-        private void Start()
+        private void Awake()
         {
             _dialoguePanel = _document.rootVisualElement.Q<DialoguePanel>();
-            BindUI().Forget();
+
+            if (!_dialogueService)
+                _dialogueService = Service.Load<DialogueService>();
         }
 
-        private async UniTaskVoid BindUI()
+        private void OnEnable()
         {
-            if (!Service.IsLoaded<DialogueService>())
-                await Service.Get<DialogueService>();
+            _dialogueService.DialogueStarted += ShowDialoguePrompt;
+            _dialogueService.DialogueEnded += HideDialoguePrompt;
+            _dialogueService.NextLineChanged += UpdateDialogueEntry;
 
-            DialogueService.BindUI(this);
+            _dialoguePanel.RegisterCallback<PointerDownEvent>(OnPointerDown);
+        }
+
+        private void OnDisable()
+        {
+            _dialogueService.DialogueStarted -= ShowDialoguePrompt;
+            _dialogueService.DialogueEnded -= HideDialoguePrompt;
+            _dialogueService.NextLineChanged -= UpdateDialogueEntry;
+
+            _dialoguePanel.UnregisterCallback<PointerDownEvent>(OnPointerDown);
+        }
+
+        private void OnPointerDown(PointerDownEvent _)
+        {
+            _dialogueService.NextLine();
         }
     }
 }

@@ -25,6 +25,7 @@
 
 # Addressables asset builds folder
 /[Aa]ssets/[Aa]ddressable[Aa]ssets[Dd]ata/*/*.bin*
+/[Aa]ssets/[Aa]ddressable[Aa]ssets[Dd]ata/*.meta
 !/[Aa]ssets/[Aa]ddressable[Aa]ssets[Dd]ata/*.asset.meta
 
 # Visual Studio cache directory

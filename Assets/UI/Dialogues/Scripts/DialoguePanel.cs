@@ -7,7 +7,8 @@ using UnityEngine.UIElements;
 
 namespace LTH.UI
 {
-    public class DialoguePanel : VisualElement
+    [UxmlElement]
+    public sealed partial class DialoguePanel : VisualElement
     {
         private readonly Label _dialogueLabel;
 
@@ -19,6 +20,13 @@ namespace LTH.UI
 
         private string _currentText;
         private int _typeDelay;
+
+        [UxmlAttribute]
+        public int CharsPerSecond
+        {
+            get => _typeDelay * 1000;
+            set => _typeDelay = (int)(value * 0.001f);
+        }
 
         private bool _dialogueReady = false;
 
@@ -107,26 +115,6 @@ namespace LTH.UI
             CancelTyping();
 
             _stringBuilder.Clear();
-        }
-
-        // SEARCHME: upgrade UI Elements as it's marked as "obsolete"
-        public new class UxmlFactory : UxmlFactory<DialoguePanel, UxmlTraits> { }
-
-        public new class UxmlTraits : VisualElement.UxmlTraits
-        {
-            private readonly UxmlIntAttributeDescription _charsPerSecond = new()
-            {
-                name = "chars-per-second",
-                defaultValue = 10
-            };
-
-            public override void Init(VisualElement ve, IUxmlAttributes bag, CreationContext cc)
-            {
-                base.Init(ve, bag, cc);
-
-                var dp = ve as DialoguePanel;
-                dp!._typeDelay = 1000 / _charsPerSecond.GetValueFromBag(bag, cc);
-            }
         }
     }
 }

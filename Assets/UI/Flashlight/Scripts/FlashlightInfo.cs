@@ -2,7 +2,8 @@ using UnityEngine.UIElements;
 
 namespace LTH.UI
 {
-    public class FlashlightInfo : VisualElement
+    [UxmlElement]
+    public sealed partial class FlashlightInfo : VisualElement
     {
         private readonly Label _batteriesCount;
         private readonly VisualElement _chargeBar;
@@ -24,8 +25,5 @@ namespace LTH.UI
         {
             _chargeBar.style.width = Length.Percent(value * 100f);
         }
-
-        public new class UxmlFactory : UxmlFactory<FlashlightInfo, UxmlTraits> { }
-        public new class UxmlTraits : VisualElement.UxmlTraits { }
     }
 }

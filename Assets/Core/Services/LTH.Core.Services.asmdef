@@ -1,0 +1,16 @@
+{
+    "name": "LTH.Services",
+    "rootNamespace": "",
+    "references": [
+        "GUID:361206fd282dd054e87d29df4f363c62"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

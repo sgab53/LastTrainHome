@@ -76,3 +76,5 @@ tools/secrets.json
 
 # Rider directories
 .idea
+
+.DS_Store

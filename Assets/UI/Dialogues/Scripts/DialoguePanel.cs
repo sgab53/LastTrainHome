@@ -109,6 +109,7 @@ namespace LTH.UI
             _stringBuilder.Clear();
         }
 
+        // SEARCHME: upgrade UI Elements as it's marked as "obsolete"
         public new class UxmlFactory : UxmlFactory<DialoguePanel, UxmlTraits> { }
 
         public new class UxmlTraits : VisualElement.UxmlTraits

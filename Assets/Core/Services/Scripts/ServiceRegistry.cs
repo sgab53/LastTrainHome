@@ -13,13 +13,15 @@ namespace LTH.Core.Services
         private readonly List<ServiceAsset> _loadedServices = new();
         private readonly Dictionary<Type, ServiceAsset> _runtimeServices = new();
 
+        private const string ServiceKey = "Service";
+
         public async UniTask<T> LoadServiceAsync<T>() where T : ServiceAsset
         {
             var serviceAsset = GetService<T>();
             if (serviceAsset)
                 return serviceAsset;
 
-            var handle = Addressables.LoadAssetAsync<T>("Service");
+            var handle = Addressables.LoadAssetAsync<T>(ServiceKey);
             await handle.Task;
 
             serviceAsset = handle.Result;
@@ -36,7 +38,7 @@ namespace LTH.Core.Services
             if (serviceAsset)
                 return serviceAsset;
 
-            serviceAsset = Addressables.LoadAssetAsync<T>("Service").WaitForCompletion();
+            serviceAsset = Addressables.LoadAssetAsync<T>(ServiceKey).WaitForCompletion();
             serviceAsset.Initialize();
             _runtimeServices[typeof(T)] = serviceAsset;
 
@@ -89,6 +91,9 @@ namespace LTH.Core.Services
 
         private async UniTask LoadAndInitializeServicesAsync()
         {
+            if (_startupAssets == null || _startupAssets.Length == 0)
+                return;
+
             var handle =
                 Addressables.LoadAssetsAsync<ServiceAsset>(_startupAssets, null, Addressables.MergeMode.Union);
             await handle.Task;

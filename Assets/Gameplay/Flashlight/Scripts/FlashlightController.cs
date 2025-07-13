@@ -1,7 +1,7 @@
 using UnityEngine;
 using UnityEngine.InputSystem;
 
-namespace LTH.Player.Components
+namespace LTH.Gameplay
 {
     public class FlashlightController : MonoBehaviour
     {
@@ -10,19 +10,25 @@ namespace LTH.Player.Components
         [SerializeField] private InputActionReference _flashlightToggle;
 
         [Header("References")]
-        [SerializeField] private FlashlightTool _flashlight;
+        [SerializeField] private FlashlightToolController _flashlight;
         [SerializeField] private Camera _camera;
         [SerializeField] private Transform _origin;
 
-        [Header("Settings")]
-        [SerializeField] private LayerMask _targetLayers;
-
         private Vector3 _direction;
 
-        private void OnValidate()
+        private void InitializeMonoBehaviour()
         {
+            if (!_flashlight)
+                _flashlight = (FlashlightToolController)GetComponent(typeof(FlashlightToolController));
+
             if (!_origin)
                 _origin = transform;
+
+            if (!_camera)
+            {
+                Debug.Assert(Camera.main, "No Main Camera found.");
+                _camera = Camera.main;
+            }
         }
 
         private void OnEnable()
@@ -52,7 +58,7 @@ namespace LTH.Player.Components
         {
             var dir = ctx.ReadValue<Vector2>();
 
-            if (Vector2.SqrMagnitude(dir) < Mathf.Epsilon)
+            if (Mathf.Approximately(Vector2.SqrMagnitude(dir), 0))
                 return;
 
             _direction = new Vector3(dir.x, 0, dir.y);
@@ -67,7 +73,7 @@ namespace LTH.Player.Components
             var direction = target - screenPos;
             var distance = Vector2.SqrMagnitude(direction);
 
-            if (distance < Mathf.Epsilon)
+            if (Mathf.Approximately(distance, 0))
                 return;
 
             var angle = Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg + 90f;

@@ -1,10 +1,11 @@
 using System;
+using LTH.Gameplay.InventorySystem;
 using UnityEngine;
 
-namespace LTH.Player.Components
+namespace LTH.Gameplay
 {
     [RequireComponent(typeof(Light))]
-    public class FlashlightTool : MonoBehaviour
+    public class FlashlightToolController : MonoBehaviour
     {
         public event Action<float> ChargeChanged;
         public event Action<int> BatteriesChanged;
@@ -14,51 +15,63 @@ namespace LTH.Player.Components
         [SerializeField] private Light _light;
 
         [Header("Parameters")]
+        [SerializeField] private int _maxBatteryCount = 3;
         [SerializeField] private float _chargeDuration = 60f;
+
+        private FlashlightTool _tool;
 
         private FlashlightState _state;
 
         private float _startTime;
-        private float _currentCharge, _remainingCharge;
+        //private float _currentCharge, _remainingCharge;
+        private float _remainingCharge;
         private int _batteries;
 
         private static readonly int DischargedTrigger = Animator.StringToHash("Discharged");
         private static readonly int TurnOnTrigger = Animator.StringToHash("TurnOn");
         private static readonly int TurnOffTrigger = Animator.StringToHash("TurnOff");
 
-        private float Charge
-        {
-            get => _currentCharge;
-            set
-            {
-                _currentCharge = value;
-                ChargeChanged?.Invoke(_currentCharge / _chargeDuration);
-            }
-        }
+        public void SetTool(FlashlightTool tool) => _tool = tool;
 
-        private int Batteries
-        {
-            get => _batteries;
-            set
-            {
-                _batteries = value;
-                BatteriesChanged?.Invoke(value);
-            }
-        }
+        // private float Charge
+        // {
+        //     get => _currentCharge;
+        //     set
+        //     {
+        //         _currentCharge = value;
+        //         ChargeChanged?.Invoke(_currentCharge / _chargeDuration);
+        //     }
+        // }
+        //
+        // private int Batteries
+        // {
+        //     get => _batteries;
+        //     set
+        //     {
+        //         _batteries = value;
+        //         BatteriesChanged?.Invoke(value);
+        //     }
+        // }
 
         private void OnValidate()
         {
-            Charge = _chargeDuration;
+            //Charge = _chargeDuration;
             _remainingCharge = 0;
+            _tool?.Initialize(_tool.Data, _maxBatteryCount, _chargeDuration);
         }
 
         private void Update()
         {
             var t = Time.realtimeSinceStartup - _startTime;
-            Charge = Mathf.Clamp(_chargeDuration - t, 0, _chargeDuration);
+            //Charge = Mathf.Clamp(_chargeDuration - t, 0, _chargeDuration);
+
+            _tool.Discharge(t);
 
             if (t < _chargeDuration)
+            {
+                ChargeChanged?.Invoke(_tool.BatteryCharge);
                 return;
+            }
 
             if (_batteries > 0)
             {
@@ -66,6 +79,7 @@ namespace LTH.Player.Components
                 return;
             }
 
+            ChargeChanged?.Invoke(_tool.BatteryCharge);
             Discharge();
         }
 
@@ -81,8 +95,6 @@ namespace LTH.Player.Components
                     _light.intensity = 1;
                     this.enabled = _light.enabled = true;
                     break;
-                default:
-                    throw new ArgumentOutOfRangeException();
             }
         }
 
@@ -95,8 +107,6 @@ namespace LTH.Player.Components
                     break;
                 case FlashlightState.On:
                     TurnOff();
-                    break;
-                default:
                     break;
             }
 
@@ -112,14 +122,19 @@ namespace LTH.Player.Components
 
         private void Recharge()
         {
-            --Batteries;
-            Charge = _chargeDuration;
+            _tool.ConsumeBattery();
+            _tool.Recharge();
+            // --Batteries;
+            // Charge = _chargeDuration;
             _startTime = Time.realtimeSinceStartup;
+
+            BatteriesChanged?.Invoke(_tool.BatteryCount);
+            ChargeChanged?.Invoke(_tool.BatteryCharge);
         }
 
         private void TurnOn()
         {
-            if (_state == FlashlightState.On || (_currentCharge <= 0f && Batteries <= 0))
+            if (_state == FlashlightState.On || !_tool.CanTurnOn)
                 return;
 
             this.enabled = true;
@@ -135,13 +150,14 @@ namespace LTH.Player.Components
 
             this.enabled = false;
             _state = FlashlightState.Off;
-            _remainingCharge = _chargeDuration - _currentCharge;
+            _remainingCharge = _chargeDuration - _tool.BatteryCharge;
             _animator.SetTrigger(TurnOffTrigger);
         }
 
         public void AddBattery()
         {
-            ++Batteries;
+            _tool.AddBattery();
+            BatteriesChanged?.Invoke(_tool.BatteryCount);
         }
     }
 

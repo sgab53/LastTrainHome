@@ -2,11 +2,11 @@ using LTH.UI;
 using UnityEngine;
 using UnityEngine.UIElements;
 
-namespace LTH.Player.Components
+namespace LTH.Gameplay.UI
 {
-    public class FlashlightUI : MonoBehaviour
+    public class FlashlightUIController : MonoBehaviour
     {
-        [SerializeField] private FlashlightTool _flashlight;
+        [SerializeField] private FlashlightToolController _flashlight;
 
         [Header("UI Elements")]
         [SerializeField] private UIDocument _document;

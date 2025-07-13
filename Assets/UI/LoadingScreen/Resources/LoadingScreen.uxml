@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<UXML
+    name="LoadingScreen"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns="UnityEngine.UIElements"
+    xsi:noNamespaceSchemaLocation="../../../../UIElementsSchema/UIElements.xsd"
+>
+    <Style src="LoadingScreen.uss"/>
+
+    <VisualElement name="Background">
+        <VisualElement name="LoadingBar" class="hidden">
+            <Label name="LoadingPercentageLabel" text="00.00%"/>
+            <VisualElement name="LoadingBar_Background">
+                <VisualElement name="LoadingBar_Fill" />
+            </VisualElement>
+        </VisualElement>
+    </VisualElement>
+</UXML>

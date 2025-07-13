@@ -6,8 +6,17 @@ EditorBuildSettings:
   serializedVersion: 2
   m_Scenes:
   - enabled: 1
-    path: Assets/Scenes/_Playground.unity
-    guid: 2cda990e2423bbf4892e6590ba056729
+    path: Assets/Scenes/BootstrapScene.unity
+    guid: 3bfa9c82193fb754b8bf3244b289c301
+  - enabled: 1
+    path: Assets/Scenes/CoreScene.unity
+    guid: 95f2b6977052b734eb7eb7c7a337bbcd
+  - enabled: 1
+    path: Assets/Scenes/TrainStationEnvironment.unity
+    guid: 8a7cea8e5ee4ae640bb7c7d90aab9949
+  - enabled: 1
+    path: Assets/Scenes/TrainStationBasement.unity
+    guid: 27277f9cd28b98845a552a881bbc1357
   m_configObjects:
     com.unity.addressableassets: {fileID: 11400000, guid: 833b25bd3d6d72f4b94137d2f8b50ca4, type: 2}
     com.unity.input.settings: {fileID: 11400000, guid: 50d64defa8ef26a47a4328e9817bc6b8, type: 2}

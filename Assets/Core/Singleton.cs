@@ -23,7 +23,7 @@ namespace LTH.Core
         {
             GameObject go;
             var type = typeof(T);
-            var instances = (T[])FindObjectsOfType(type);
+            var instances = FindObjectsByType<T>(FindObjectsInactive.Include, FindObjectsSortMode.None);
             var count = instances.Length;
 
             if (count >= 1)

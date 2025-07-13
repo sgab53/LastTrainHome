@@ -43,7 +43,8 @@ namespace LTH.InteractionSystem
             if (!_interactionService)
                 return;
 
-            var count = Physics.OverlapSphereNonAlloc(transform.position, _interactionRadius, _hits,
+            var position = transform.position;
+            var count = Physics.OverlapSphereNonAlloc(position, _interactionRadius, _hits,
                 interactableLayers);
 
             if (count <= 0)
@@ -52,32 +53,32 @@ namespace LTH.InteractionSystem
                 return;
             }
 
-            var nearest = FindNearest();
+            var nearest = FindNearest(_hits, count, position);
 
-            if (!nearest)
+            if (nearest < 0)
             {
                 _interactionService.UnsetTarget();
                 return;
             }
 
-            _interactionService.SwapTargetIfValid(nearest.gameObject);
+            _interactionService.SwapTargetIfValid(_hits[nearest].gameObject);
             return;
 
-            Collider FindNearest()
+            static int FindNearest(Collider[] hits, int count, Vector3 origin)
             {
-                nearest = null;
+                var nearest = -1;
                 var closestDist = Mathf.Infinity;
 
                 for (var i = 0; i < count; ++i)
                 {
-                    var c = _hits[i];
-                    var dist = (c.transform.position - transform.position).sqrMagnitude;
+                    var colliderPos = hits[i].transform.position;
+                    var dist = (colliderPos - origin).sqrMagnitude;
 
                     if (dist >= closestDist)
                         continue;
 
                     closestDist = dist;
-                    nearest = c;
+                    nearest = i;
                 }
 
                 return nearest;

@@ -1,4 +1,5 @@
 using LTH.Core.Services;
+using LTH.Input;
 using LTH.InteractionSystem;
 using UnityEngine;
 using UnityEngine.AddressableAssets;
@@ -50,9 +51,17 @@ namespace LTH.DialogueSystem
 
         private void OnDialogueEnded()
         {
+            // SEARCHME: add input service to make possible
+            // input enabling and disabling without directly
+            // referencing InputActionAsset
+
+            // var inputService = Service.Get<InputService>()
+            // inputService.
+
             switch (_activation)
             {
                 case DialogueTriggerActivation.Once:
+                    _dialogueService.DialogueEnded -= OnDialogueEnded;
                     break;
                 case DialogueTriggerActivation.Repeat:
                     this.enabled = true;

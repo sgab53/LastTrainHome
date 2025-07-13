@@ -1,7 +1,7 @@
 using UnityEngine;
 using UnityEngine.InputSystem;
 
-namespace LTH.Input
+namespace LTH.Gameplay
 {
     public class TopDownMovement : MonoBehaviour
     {
@@ -26,10 +26,8 @@ namespace LTH.Input
 
             if (!_cameraTransform)
             {
-                if (Camera.main)
-                    _cameraTransform = Camera.main!.transform;
-                else
-                    Debug.LogError("No Main Camera found.");
+                Debug.Assert(Camera.main, "No Main Camera found.");
+                _cameraTransform = Camera.main!.transform;
             }
         }
 
